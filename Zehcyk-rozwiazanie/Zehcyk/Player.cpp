@@ -74,13 +74,10 @@ void Player::take_card(Card card_to_take)
 void Player::sort_cards()
 {
 	for (short i = 0; i < 8; i++)
-		for (short j = 1; j < 8 - i; j++)
+		for (short  j = 1; j < (8 - i); j++)
 			if (player_cards[j - 1].sort_value > player_cards[j].sort_value)
 				swap(player_cards[j - 1], player_cards[j]);
 }
-//***************************************************************************************************************************************************************************
-// SHOW PLAYER CARDS FROM HIS HAND
-// SUBFUNCTION FOR:
 
 
 void Player::show(short how_many, short when)
@@ -298,45 +295,67 @@ Card Player::compare_two(Card& first_comp, Card& second_comp)
 	else return first_comp; 
 }
 
-vector<short> Player::which_card_you_may_throw(Card &first)
+vector<short> Player::which_card_you_may_throw(Card &first, short trumph)
 {
-	vector <short> kill, be_killed;
+	vector <short> kill, be_killed, kill_with_trumph;
+	
 	for (int i = 0; i < player_cards.size(); i++)
 	{
 		if (first.colour == player_cards[i].colour)
 		{
 			if (first.value < player_cards[i].value)
-				kill.push_back(i+1);
+				kill.push_back(i + 1);
 			else
-				be_killed.push_back(i+1);
+				be_killed.push_back(i + 1);
 		}
+		else if (first.colour != trumph && player_cards[i].colour == trumph)
+			kill_with_trumph.push_back(i + 1);
 	}
 	if (kill.empty() == true)
 	{
-		if (be_killed.empty() == true)
-			return {};
-		else
+		if (kill_with_trumph.empty() == false)
+		{
+			return kill_with_trumph;
+		}
+		else if (be_killed.empty() == false)
 			return be_killed;
+		else
+			return {};
 	}
 	else
 		return kill;
 }
 
 
-Card Player::which_card_you_throw(short choice_f[], short player)
+Card Player::which_card_you_throw( short player, short trumph)
 {
 	if (player_cards.size() != 1)
 	{
 		bool correct = true;
 		do
 		{
-			choice_f[player] = NULL;
+			choice = NULL;
+			switch (trumph)
+			{
+			case 1:
+				cout << "Tromfem jest czerwien.\n";
+				break;
+			case 2:
+				cout << "Tromfem jest dzwonek.\n";
+				break;
+			case 3:
+				cout << "Tromfem jest wino.\n";
+				break;
+			case 4:
+				cout << "Tromfem jest zoladz.\n";
+				break;
+			}
 			show(player_cards.size(), 2);
 			cout << "Ktora, karte chcesz rzucic?\n\nTwoj wybor: ";
-			cin >> choice_f[player];
-			cin_check(choice_f[player], "NULL");
+			cin >> choice;
+			cin_check(choice, "NULL");
 
-			if (choice_f[player] > player_cards.size() || choice_f[player] < 1)
+			if (choice > player_cards.size() || choice < 1)
 			{
 				correct = false;
 				system("CLS");
@@ -347,8 +366,8 @@ Card Player::which_card_you_throw(short choice_f[], short player)
 				correct = true;
 
 		} while (correct == false);
-		(choice_f[player])--;
-		return player_cards[choice_f[player]];
+		choice--;
+		return player_cards[choice];
 	}
 	else
 	{
@@ -359,7 +378,7 @@ Card Player::which_card_you_throw(short choice_f[], short player)
 	}
 	}
 
-Card Player::which_card_you_throw(short choice_f[], short player, Card &first, string& who_started_trick)
+Card Player::which_card_you_throw( short player, Card &first, string& who_started_trick, short trumph)
 {
 	vector <short> may_throw = { NULL };
 	if (player_cards.size() != 1)
@@ -367,9 +386,23 @@ Card Player::which_card_you_throw(short choice_f[], short player, Card &first, s
 		bool correct = false;
 		do {
 			cout << "Rozpoczal " << who_started_trick <<". Rzucono: " << first.symbol << endl << endl;
-			choice_f[player] = NULL;
+			choice = NULL; switch (trumph)
+			{
+			case 1:
+				cout << "Tromfem jest czerwien.\n";
+				break;
+			case 2:
+				cout << "Tromfem jest dzwonek.\n";
+				break;
+			case 3:
+				cout << "Tromfem jest wino.\n";
+				break;
+			case 4:
+				cout << "Tromfem jest zoladz.\n";
+				break;
+			}
 			show(player_cards.size(), 2);
-			may_throw = which_card_you_may_throw(first);
+			may_throw = which_card_you_may_throw(first, trumph);
 			if (may_throw.empty() == false)
 			{
 				cout << "\nMozesz rzucic nr :\t";
@@ -377,10 +410,10 @@ Card Player::which_card_you_throw(short choice_f[], short player, Card &first, s
 					cout << may_throw[i] << "  ";
 				cout << endl << endl;
 				cout << "Ktora, karte chcesz rzucic?\n\nTwoj wybor: ";
-				cin >> choice_f[player];
-				cin_check(choice_f[player], "NULL");
+				cin >> choice;
+				cin_check(choice, "NULL");
 
-				if (choice_f[player] > player_cards.size() || choice_f[player] < 1)
+				if (choice > player_cards.size() || choice < 1)
 				{
 					correct = false;
 					system("CLS");
@@ -393,7 +426,7 @@ Card Player::which_card_you_throw(short choice_f[], short player, Card &first, s
 					bool throw_correct = false;
 					for (int i = 0; i < may_throw.size(); i++)
 					{
-						if (choice_f[player] == may_throw[i])
+						if (choice == may_throw[i])
 						{
 							correct = true;
 							throw_correct = true;
@@ -414,10 +447,10 @@ Card Player::which_card_you_throw(short choice_f[], short player, Card &first, s
 			else
 			{
 				cout << "Ktora, karte chcesz rzucic?\n\nTwoj wybor: ";
-				cin >> choice_f[player];
-				cin_check(choice_f[player], "NULL");
+				cin >> choice;
+				cin_check(choice, "NULL");
 
-				if (choice_f[player] > player_cards.size() || choice_f[player] < 1)
+				if (choice > player_cards.size() || choice < 1)
 				{
 					correct = false;
 					system("CLS");
@@ -429,8 +462,8 @@ Card Player::which_card_you_throw(short choice_f[], short player, Card &first, s
 					correct = true;
 			}
 		} while (correct == false);
-		(choice_f[player])--;
-		return player_cards[choice_f[player]];
+		choice--;
+		return player_cards[choice];
 	}
 	else
 	{
@@ -442,7 +475,7 @@ Card Player::which_card_you_throw(short choice_f[], short player, Card &first, s
 	}
 }
 
-Card Player::which_card_you_throw(short choice_f[], short player, Card &first, Card &second, string &who_started_trick)
+Card Player::which_card_you_throw (short player, Card &first, Card &second, string &who_started_trick, short trumph)
 {
 	vector <short> may_throw = { NULL };
 	if (player_cards.size() != 1)
@@ -450,10 +483,25 @@ Card Player::which_card_you_throw(short choice_f[], short player, Card &first, C
 		bool correct = false;
 		do {
 			cout << "Rozpoczal " << who_started_trick << ". Rzucono: " << first.symbol << "\t" << second.symbol << endl << endl;
-			choice_f[player] = NULL;
+			choice = NULL;
+			switch (trumph)
+			{
+			case 1:
+				cout << "Tromfem jest czerwien.\n";
+				break;
+			case 2:
+				cout << "Tromfem jest dzwonek.\n";
+				break;
+			case 3:
+				cout << "Tromfem jest wino.\n";
+				break;
+			case 4:
+				cout << "Tromfem jest zoladz.\n";
+				break;
+			}
 			show(player_cards.size(), 2);
 			Card to_fight = compare_two(first, second);
-			may_throw = which_card_you_may_throw(to_fight);
+			may_throw = which_card_you_may_throw(to_fight, trumph);
 			if (may_throw.empty() == false )
 			{
 				cout << "\nMozesz rzucic nr:\t";
@@ -461,10 +509,10 @@ Card Player::which_card_you_throw(short choice_f[], short player, Card &first, C
 					cout << may_throw[i] << "  ";
 				cout << endl << endl;
 				cout << "Ktora, karte chcesz rzucic?\n\nTwoj wybor: ";
-				cin >> choice_f[player];
-				cin_check(choice_f[player], "NULL");
+				cin >> choice;
+				cin_check(choice, "NULL");
 
-				if (choice_f[player] > player_cards.size() || choice_f[player] < 1)
+				if (choice > player_cards.size() || choice < 1)
 				{
 					correct = false;
 					system("CLS");
@@ -477,7 +525,7 @@ Card Player::which_card_you_throw(short choice_f[], short player, Card &first, C
 					bool throw_correct = false;
 					for (int i = 0; i < may_throw.size(); i++)
 					{
-						if (choice_f[player] == may_throw[i])
+						if (choice == may_throw[i])
 						{
 							correct = true;
 							throw_correct = true;
@@ -496,10 +544,10 @@ Card Player::which_card_you_throw(short choice_f[], short player, Card &first, C
 			else
 			{
 				cout << "Ktora, karte chcesz rzucic?\n\nTwoj wybor: ";
-				cin >> choice_f[player];
-				cin_check(choice_f[player], "NULL");
+				cin >> choice;
+				cin_check(choice, "NULL");
 
-				if (choice_f[player] > player_cards.size() || choice_f[player] < 1)
+				if (choice > player_cards.size() || choice < 1)
 				{
 					correct = false;
 					system("CLS");
@@ -511,8 +559,8 @@ Card Player::which_card_you_throw(short choice_f[], short player, Card &first, C
 					correct = true;
 			}
 		} while (correct == false);
-		(choice_f[player])--;
-		return player_cards[choice_f[player]];
+		choice--;
+		return player_cards[choice];
 	}
 	else
 	{
@@ -524,7 +572,7 @@ Card Player::which_card_you_throw(short choice_f[], short player, Card &first, C
 	}
 }
 
-void Player::destroy_thrown_card(short choice_f2[], short player_des)
+void Player::destroy_thrown_card()
 {
-	player_cards.erase(player_cards.begin() + (choice_f2[player_des]));
+	player_cards.erase(player_cards.begin() + (choice));
 }

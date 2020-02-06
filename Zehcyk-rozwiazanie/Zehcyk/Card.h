@@ -12,7 +12,7 @@ class Card
 
 public:
 
-    void create_card(int, char, char, char, short);
+    void create_card(short, char, char, char, short);
 };
 
 #endif

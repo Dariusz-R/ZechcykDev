@@ -94,13 +94,13 @@ Card* deck_2[24];
 
 void Run::create_cards()
 {
-	int values[6] = { 0, 2, 3, 4, 10, 11 };
+	short values[6] = { 0, 2, 3, 4, 10, 11 };
 	char symbol[6] = { '9', 'J', 'D', 'K', '1', 'A' };
 	char colour[4] = { '\3', '\4', '\6', '\5' };
 
-	for (int i = 0; i < 4; i++)
+	for (short i = 0; i < 4; i++)
 	{
-		for (int j = 0; j < 6; j++)
+		for (short j = 0; j < 6; j++)
 		{
 			deck_1[6 * i + j].create_card((6 * i + j), values[j], symbol[j], colour[i], i+1);
 			//cout <<endl << deck_1[ 6 * i + j ].symbol <<"  " << deck_1[ 6 * i + j ].value << " " << deck_1[6*i+j].colour;       //TEST CZY PRZETASOWANO KARTY
@@ -205,9 +205,11 @@ short Run::which_gametype()
 
 			case 1:
 				cout << players[i].name << " - Kontra-Warszawa!\n\n";
+				break;
 
 			case 2:
 				cout << players[i].name << " - Rekontra-Warszawa!\n\n";
+				break;
 
 			default:
 				cout << "Blad w switchu 2 w run.cpp" << endl << endl;
@@ -234,7 +236,7 @@ short Run::which_gametype()
 
 	if (which_game == 1 || which_game == 2 || which_game == 3 || which_game == 4)
 	{
-		if (players[which_player].ask_or_not() == true);
+		if (players[which_player].ask_or_not() == true)
 		{
 			short second_option = NULL;
 			extern short contra_counter;
@@ -372,14 +374,17 @@ void Run::run_game(short game_to_run)
 	else if (game_to_run == 1 || game_to_run == 2 || game_to_run == 3 || game_to_run == 4)
 	{
 		short choice = NULL, who_lose = NULL;
+		extern short contra_counter;
 		Game_Colour playing_colour;
 		playing_colour.share_players(players);
+		playing_colour.set_trumph(game_to_run);
+		playing_colour.get_trumph();
 		short initiative = 0;
 		for (int i = 0; i < 8; i++)
 			initiative = playing_colour.take_and_compare(initiative);
 		who_lose = playing_colour.who_won();
 		cout << "Przegral gracz " << players[who_lose].name << " uzyskujac " << playing_colour.players_points[who_lose] << "pkt.\n";
-		if (warsow == 1)
+		if (contra_counter == 1)
 		{
 			cout << "Gracz " << players[who_lose].name << " przegral za 1 punkt meczowy";
 		}

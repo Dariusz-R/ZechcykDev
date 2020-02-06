@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void Card::create_card(int i, char val, char sym, char col, short col2)
+void Card::create_card(short i, char val, char sym, char col, short col2)
 {
 	if ((i > 23) || (i < 0))
 		cout << "Error, cards were not created." << endl;
@@ -31,15 +31,15 @@ void Card::create_card(int i, char val, char sym, char col, short col2)
 		break;
 
 	case '\4':
-		sort_value = value + 10;
-		break;
-
-	case '\6':
 		sort_value = value + 20;
 		break;
 
-	case '\5':
+	case '\6':
 		sort_value = value + 30;
+		break;
+
+	case '\5':
+		sort_value = value + 40;
 		break;
 	default:
 		cout << "Cos sie zepsulo podczas tworzenia kart";

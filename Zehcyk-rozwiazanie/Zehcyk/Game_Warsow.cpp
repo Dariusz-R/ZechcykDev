@@ -58,12 +58,12 @@ short Game_Warsow::compare(short& a, short& b, short& c)
 
 short Game_Warsow::take_and_compare(short init)
 {
-	short which_won = NULL, choice[3] = { NULL }, subsum = NULL, a = init % 3, b = (init + 1) % 3, c = (init + 2) % 3;
-	thrown[a] = players_game_warsow[a].which_card_you_throw(choice, 0);
+	short which_won = NULL, subsum = NULL, a = init % 3, b = (init + 1) % 3, c = (init + 2) % 3;
+	thrown[a] = players_game_warsow[a].which_card_you_throw(0);
 	system("CLS");
-	thrown[ b ] = players_game_warsow[b].which_card_you_throw(choice, 1, thrown[a], players_game_warsow[a].name);
+	thrown[ b ] = players_game_warsow[b].which_card_you_throw(1, thrown[a], players_game_warsow[a].name);
 	system("CLS");
-	thrown[c] = players_game_warsow[c].which_card_you_throw(choice, 2, thrown[a], thrown[b], players_game_warsow[a].name);
+	thrown[c] = players_game_warsow[c].which_card_you_throw(2, thrown[a], thrown[b], players_game_warsow[a].name);
 	system("CLS");
 	which_won = compare(a,b,c);
 	subsum = thrown[0].value + thrown[1].value + thrown[2].value;
@@ -74,7 +74,7 @@ short Game_Warsow::take_and_compare(short init)
 	system("CLS");
 
 	for (short i = 0; i < 3; i++)
-		players_game_warsow[i].destroy_thrown_card(choice, i);
+		players_game_warsow[i].destroy_thrown_card();
 	
 	return which_won;
 }
