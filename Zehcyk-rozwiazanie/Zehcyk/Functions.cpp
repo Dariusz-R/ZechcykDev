@@ -31,60 +31,81 @@ void showing_txt(string file_name)
 // CHECKS IF VALUE OF CIN HAS SAME TYPE AS IT WAS DEFINED. OTHERWISE FUNCTION ASKS ONCE AGAIN TO ENTER THE DATA
 // CIN IGNORE NEED TO BE MORE SECURED.
 
-short cin_check(short& cin_value, string file_name)
+short cin_check(short& cin_value, short range)
 {
 	while (1)
 	{
 
-		if (cin.fail())
+		if (cin.fail() || cin_value > range || cin_value < 1)
 		{
 			cin.clear();
 			cin.ignore(100, '\n');
-			cout << "Podany znak nie jest cyfra. Sprobuj ponownie" << endl;
-			Sleep(1000);
 			system("CLS");
-			if (file_name != "NULL")
-			showing_txt(file_name);
-			cout << "\tTwoja wybor :";
-			cin >> cin_value;
+			cout << "Wprowadzono bledne dane. Sprobuj jeszcze raz." << endl;
+			system("pause");
+			system("CLS");
+			//if (file_name != "")
+			//showing_txt(file_name);
+			//cout << "\tTwoja wybor :";
+			//cin >> cin_value;
+			return cin_value = NULL;
 		}
 		else
-			break;
-
+		{
+			return cin_value;
+		}
 	}
-	cout << endl << endl;
-	return cin_value;
 }
 
-string game_name(short& which_game)
+string start_menu = "", auct_1, auct_2 = "", auct_3 = "", auct_4 = "", meet_1 = "", meet_2 = "", meet_3;
+
+void load_language_version(string language)
 {
-	switch (which_game)
-	{
-	case 1:
-		return "czerwien";
-		break;
-	case 2:
-		return "dzwonek";
-		break;
-	case 3:
-		return "wino";
-		break;
-	case 4:
-		return "zoladz";
-		break;
-	case 5:
-		return "warszawa";
-		break;
-	case 6:
-		return "kontra-warszawa";
-		break;
-	case 7:
-		return "durh";
-		break;
-	case 8:
-		return "mizerka";
-		break;
+	fstream language_version;
 
+	if (language == "POLISH") language_version.open("POLISH.txt", ios::in);
+	else if (language == "ENGLISH")	language_version.open("ENGLISH.txt", ios::in);
+	else {
+		cout << "Blad podczas otwierania pakietu jezykowego\n\n";
+		system("pause");
+		exit(0);
 	}
-}
+	if (language_version.good() == false)
+	{
+		cout << "Blad podczas otwierania skryptu." << endl << endl;
+		exit(0);
+	}
+	
+	string line;
+	short line_counter = 1; 
 
+
+	while (getline(language_version, line))
+	{
+		if (line_counter < 14) {
+			if (start_menu == "") { start_menu = line; }
+			else { start_menu = start_menu + "\n" + line; }
+		}
+		else if (line_counter > 13 && line_counter < 21) {
+			if (auct_1 == "") { auct_1 = line; }
+			else { auct_1 = auct_1 + "\n" + line; }
+		}
+		else if (line_counter == 21) {
+			auct_2 = auct_1;
+			auct_3 = auct_1;
+			auct_1 = auct_1 + "\n" + line;
+		}
+		else if (line_counter > 21 && line_counter < 24) { auct_2 = auct_2 + "\n" + line; }
+		else if (line_counter > 23 && line_counter < 26) { auct_3 = auct_3 + "\n" + line; }
+		else if (line_counter == 26) { meet_1 = line; }
+		else if (line_counter == 27) { meet_1 = meet_1 + "\n" + line; }
+		else if (line_counter == 28) { meet_2 = line; }
+		else if (line_counter == 29) { meet_3 = line; }
+		line_counter++;
+	}
+		
+
+	language_version.close();
+
+	//cout << start_menu << endl << auct_1 << endl << auct_2 << endl << auct_3 << endl;
+}

@@ -16,7 +16,7 @@ void contra_reset()
 int main()
 {
     Run zechcyk ;
-    zechcyk.start() ; // Tworzy menu i pyta czy chcesz grac
+    zechcyk.start(zechcyk.select_language()) ; // Tworzy menu i pyta czy chcesz grac
     zechcyk.meet_players() ;
     zechcyk.create_cards() ;
     zechcyk.shuffle_cards() ;

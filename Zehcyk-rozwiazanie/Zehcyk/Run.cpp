@@ -4,58 +4,55 @@
 using namespace std;
 
 
+void Run::set_game_type(short number) { game_type = number; }
+short* Run::get_game_type_pointer() { return &game_type; }
+short Run::get_game_type() { return game_type; }
+//Player[] Run::get_players() { return players; }
+
+
+
+
+
+
 
 //***************************************************************************************************************************************************************************
 // USES FUNION ABOVE AND ASKS IF USER WANT TO PLAY
 
 
-void Run::start()
+string Run::select_language() {
+	short language_pack;
+	do {
+		cout << "Please select language / Prosze, wybierz jezyk : \n\n1. POLSKI/POLISH\n2. ANGIELSKI/ENGLISH\n\nTwoj wybor: ";
+		cin >> language_pack;
+		cin_check(language_pack, 3);
+		if (language_pack == 1) { system("CLS"); return "POLISH"; }
+		else if (language_pack == 2) { system("CLS"); return "ENGLISH"; }
+	} while (language_pack != 2);
+}
+
+void Run::start(string language_pack)
 {
 
 	short want_to_play = NULL;
-	bool loop_choice = NULL;
+	bool loop_choice = false;
+	extern string start_menu;
+	load_language_version(language_pack);
 
 	do
 	{
-
-		showing_txt("Tekst_Menu1.txt");
-
+		cout << start_menu << endl;
 		cout << "\tTwoja odpowiedz: ";
 
 		cin >> want_to_play;
 		loop_choice = false;
-		want_to_play = cin_check(want_to_play, "Tekst_Menu1.txt");
-	
-		switch (want_to_play)
-		{
-
-		case 1:
-			system("CLS");
-			cout << "To gramy!" << endl;
-			Sleep(1000);
-			loop_choice = true;
-			system("CLS");
-			break;
-
-		case 2:
-			cout << "No to nie gramy! Czesc!" << endl;
-			exit(0);
-			break;
-
-		case 3: 
+		cin_check(want_to_play, 3);
+		if (want_to_play == 1) { loop_choice = true; system("CLS"); }
+		else if (want_to_play == 2) { cout << "Program zostanie zamkniety.\n"; system("pause"); exit(0); }
+		else if (want_to_play == 3) {  
 			ShellExecute(GetDesktopWindow(), L"open", L"ZECHCYK2.pdf", NULL, NULL, SW_SHOWMAXIMIZED);
 			system("CLS");
-			break;
-
-		default:
-			cout << "Dokonales wyboru, ktorego nie uwzglednia program. Sprobuj ponownie." << endl;
-			Sleep(1000);
-			system("CLS");
-			break;
-
 		}
-
-	} while (loop_choice == false);
+	} while (want_to_play != 1);
 
 
 }
@@ -64,7 +61,7 @@ void Run::start()
 //***************************************************************************************************************************************************************************
 //CREATING PLAYERS (OBJECTS), ASKS THEM TO GIVE THEIR NAMES AND TO CONFIRM THAT THEY WERE PROPERLY ENTERED - SHOWS THEM ON THE SCREEN
 
-Player players[3];
+
 
 void Run::meet_players()
 {
@@ -73,7 +70,7 @@ void Run::meet_players()
 	for (int i = 0; i < 3; i++)
 	{
 		number = i + 1;
-		players[i].name_players(number);
+		players[i].name_player(number);
 	}
 	for (int i = 0; i < 3; i++)
 	{
@@ -171,22 +168,22 @@ short Run::which_gametype()
 {
 	for (int i = 0; i < 3; i++)
 	{
-		which_game = players[i].choice_game_type(warsow);
-		if (which_game == 5)
+		set_game_type(players[i].choice_game_type(warsow));
+		if (get_game_type() == 5)
 		{
 			switch (warsow)
 			{
 			case NULL:
 				warsow++;
-				cout << players[i].name << " - Warszawa!\n\n";
+				cout << players[i].get_name() << " - Warszawa!\n\n";
 				break;
 
 			case 1:
-				cout << players[i].name << " - Z Warszawa!\n\n";
+				cout << players[i].get_name() << " - Z Warszawa!\n\n";
 				break;
 
 			case 2:
-				cout << players[i].name << " - Z Kontra-Warszawa\n\n";
+				cout << players[i].get_name() << " - Z Kontra-Warszawa\n\n";
 				break;
 
 			default:
@@ -198,17 +195,17 @@ short Run::which_gametype()
 			system("ClS");
 
 		}
-		else if (which_game == 6)
+		else if (get_game_type() == 6)
 		{
 			switch (warsow)
 			{
 
 			case 1:
-				cout << players[i].name << " - Kontra-Warszawa!\n\n";
+				cout << players[i].get_name() << " - Kontra-Warszawa!\n\n";
 				break;
 
 			case 2:
-				cout << players[i].name << " - Rekontra-Warszawa!\n\n";
+				cout << players[i].get_name() << " - Rekontra-Warszawa!\n\n";
 				break;
 
 			default:
@@ -224,69 +221,68 @@ short Run::which_gametype()
 			warsow++;
 			break;
 		}
-		else if (which_game == 1 || which_game == 2 || which_game == 3 || which_game == 4)
+		else if (get_game_type() == 1 || get_game_type() == 2 || get_game_type() == 3 || get_game_type() == 4)
 		{
 			which_player = i;
-			which_trumph = which_game;
-			cout << "Gracz " << players[i].name << " obral kolor! ";
+			cout << "Gracz " << players[i].get_name() << " obral kolor! ";
 			break;
 		}
 		
 	}
 
-	if (which_game == 1 || which_game == 2 || which_game == 3 || which_game == 4)
+	if (get_game_type() == 1 || get_game_type() == 2 || get_game_type() == 3 || get_game_type() == 4)
 	{
 		if (players[which_player].ask_or_not() == true)
-		{
+		{	
 			short second_option = NULL;
 			extern short contra_counter;
 			do
 			{
-				second_option = players[(which_player + 1) % 3].other_player_asked(which_game, contra_counter);
+				second_option = players[(which_player + 1) % 3].other_player_asked(get_game_type_pointer(), contra_counter);
 				check_if(second_option, ((which_player + 1) % 3) , contra_counter);
 				if (second_option == 1 && contra_counter < 5)
 				{
-					second_option = players[(which_player + 2) % 3].other_player_asked(which_game, contra_counter);
+					second_option = players[(which_player + 2) % 3].other_player_asked(get_game_type_pointer(), contra_counter);
 					check_if(second_option, ((which_player + 2) % 3), contra_counter);
 				}
 				if (second_option == 2 && contra_counter < 5)
 				{
-					second_option = players[which_player % 3].other_player_asked(which_game, contra_counter);
+					second_option = players[which_player % 3].other_player_asked(get_game_type_pointer(), contra_counter);
 					check_if(second_option, (which_player % 3), contra_counter);
 				}
 			} while (second_option == 2);
-			if (which_game == 7)
+			if (get_game_type() == 7)
 			{
 				do
 				{
-					second_option = players[(which_player + 1) % 3].other_player_asked(which_game, contra_counter);
+					second_option = players[(which_player + 1) % 3].other_player_asked(get_game_type_pointer(), contra_counter);
 					check_if(second_option, ((which_player + 1) % 3), contra_counter);
 					if (second_option == 1 && contra_counter < 5)
 					{
-						second_option = players[(which_player + 2) % 3].other_player_asked(which_game, contra_counter);
+						second_option = players[(which_player + 2) % 3].other_player_asked(get_game_type_pointer(), contra_counter);
 						check_if(second_option, ((which_player + 2) % 3), contra_counter);
 					}
 					if (second_option == 2 && contra_counter < 5)
 					{
-						second_option = players[which_player % 3].other_player_asked(which_game, contra_counter);
+						second_option = players[which_player % 3].other_player_asked(get_game_type_pointer(), contra_counter);
 						check_if(second_option, (which_player % 3), contra_counter);
 					}
 				} while (second_option == 2);
 			}
-			if (which_game == 8)
+			if (get_game_type() == 8)
 			{
 				do
 				{
-					second_option = players[(which_player + 1) % 3].other_player_asked(which_game, contra_counter);
+					second_option = players[(which_player + 1) % 3].other_player_asked(get_game_type_pointer(), contra_counter);
 					check_if(second_option, ((which_player + 1) % 3), contra_counter);
 					if (second_option == 1 && contra_counter < 5)
 					{
-						second_option = players[(which_player + 2) % 3].other_player_asked(which_game, contra_counter);
+						second_option = players[(which_player + 2) % 3].other_player_asked(get_game_type_pointer(), contra_counter);
 						check_if(second_option, ((which_player + 2) % 3), contra_counter);
 					}
 					if (second_option == 2 && contra_counter < 5)
 					{
-						second_option = players[which_player % 3].other_player_asked(which_game, contra_counter);
+						second_option = players[which_player % 3].other_player_asked(get_game_type_pointer(), contra_counter);
 						check_if(second_option, (which_player % 3), contra_counter);
 					}
 				} while (second_option == 2);
@@ -301,21 +297,21 @@ short Run::which_gametype()
 
 
 
-	else if (which_game == 5 || which_game == 6)
+	else if (get_game_type() == 5 || get_game_type() == 6)
 	{
 
 		switch (warsow)
 		{
 		case 1:
-			cout << "Gramy w Warszawe. Zaczyna gracz " << players[which_player].name << endl << endl;
+			cout << "Gramy w Warszawe. Zaczyna gracz " << players[which_player].get_name() << endl << endl;
 			break;
 
 		case 2:
-			cout << "Gramy w Kontre-Warszawe. Zaczyna gracz " << players[which_player].name << endl << endl;
+			cout << "Gramy w Kontre-Warszawe. Zaczyna gracz " << players[which_player].get_name() << endl << endl;
 			break;
 
 		case 3:
-			cout << "Gramy w Rekontre-Warszawe. Zaczyna gracz " << players[which_player].name << endl << endl;
+			cout << "Gramy w Rekontre-Warszawe. Zaczyna gracz " << players[which_player].get_name() << endl << endl;
 			break;
 
 		default:
@@ -334,7 +330,7 @@ short Run::which_gametype()
 
 
 
-	return which_game;
+	return get_game_type();
 }
 
 void Run::run_game(short game_to_run)
@@ -348,7 +344,7 @@ void Run::run_game(short game_to_run)
 		for (int i = 0; i < 8; i++)
 			initiative = playing_warsow.take_and_compare(initiative);
 		who_lose = playing_warsow.who_won();
-		cout << "Przegral gracz " << players[who_lose].name << " uzyskujac " << playing_warsow.players_points[who_lose] << "pkt.\n";
+		cout << "Przegral gracz " << players[who_lose].get_name() << " uzyskujac " << playing_warsow.players_points[who_lose] << "pkt.\n";
 		switch (warsow)
 		{
 		case 1:
@@ -383,18 +379,18 @@ void Run::run_game(short game_to_run)
 		for (int i = 0; i < 8; i++)
 			initiative = playing_colour.take_and_compare(initiative);
 		who_lose = playing_colour.who_won();
-		cout << "Przegral gracz " << players[who_lose].name << " uzyskujac " << playing_colour.players_points[who_lose] << "pkt.\n";
+		cout << "Przegral gracz " << players[who_lose].get_name() << " uzyskujac " << playing_colour.players_points[who_lose] << "pkt.\n";
 		if (contra_counter == 1)
 		{
-			cout << "Gracz " << players[who_lose].name << " przegral za 1 punkt meczowy";
+			cout << "Gracz " << players[who_lose].get_name() << " przegral za 1 punkt meczowy";
 		}
 		else if (warsow == 2)
 		{
-			cout << "Gracz " << players[who_lose].name << " przegral za 2 punkty meczowe";
+			cout << "Gracz " << players[who_lose].get_name() << " przegral za 2 punkty meczowe";
 		}
 		else if (warsow == 3)
 		{
-			cout << "Gracz " << players[who_lose].name << " przegral za 4 punkty meczowe";
+			cout << "Gracz " << players[who_lose].get_name() << " przegral za 4 punkty meczowe";
 		}
 
 	}

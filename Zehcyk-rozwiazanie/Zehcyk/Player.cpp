@@ -3,6 +3,7 @@
 #include <windows.h>
 #include "Functions.h"
 #include <vector>
+#include <stdlib.h>
 
 
 
@@ -11,11 +12,29 @@
 using namespace std;
 
 
+
+string Player::get_name(){ return name; }
+
+
+void Player::add_trick_points(short points) { trick_points += points; }
+short Player::get_trick_points(){ return trick_points; }
+void Player::reset_trick_points() { trick_points = NULL; }
+
+void Player::add_game_points(short points) { trick_points += points; }
+short Player::get_game_points(){ return game_points; }
+
+void Player::set_player_number(short number) { player_number = number; }
+short Player::get_player_number(){ return player_number; }
+
+
+void Player::set_choice(short option) { choice = option;  }
+short Player::get_choice(){ return choice; }
+
 //***************************************************************************************************************************************************************************
 // ASKS FOR PLAYER NAME
 // SUBFUNCTION FOR: Run::meet_players()
 
-void Player::name_players(short number)
+void Player::name_player(short number)
 {
 	player_number = number - 1;
 	cout << "Podaj nazwe gracza numer " << number << endl;
@@ -95,8 +114,6 @@ void Player::show(short how_many, short when)
 		for (int i = 0; i < how_many; i++)
 		{
 			cout << i+1 << "\t";
-
-
 		}
 	}
 	cout << endl << endl;
@@ -109,43 +126,38 @@ void Player::show(short how_many, short when)
 
 int Player::choice_game_type(short &warsow)
 {
-	int option = 20;
+	short option = NULL;
 	bool decision = false;
+	extern string auct_1, auct_2, auct_3;
+	string file_to_use = "";
 
-	show(4, NULL);
-	cout << name;
-	switch (warsow)
-	{
-	case NULL:
-		showing_txt("PICK1.txt");
-		break;
-	case 1:
-		showing_txt("PICK2.txt");
-		break;
-	case 2:
-		showing_txt("PICK3.txt");
-		break;
-	default:
-		cout << "Blad w switchu w player.cpp" << endl;
-	}
-
+	
 	do
 	{
-		cout << "\n\nTwoj wybor : ";
-		cin >> option;
-		switch (option)
-		{
+		show(4, NULL);
+		switch (warsow) {
+		case NULL:
+			cout << name << auct_1;
+			break;
 		case 1:
+			cout << name << auct_2;
+			break;
 		case 2:
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-			decision = true;
+			cout << name << auct_3;
 			break;
 		default:
-			cout << "\nWybrales opcje spoza zakresu. Sprobuj ponownie" << endl;
+			cout << "BLAD. WARSZAWA MA ZA DUZY LICZNIK KONTR" << endl;
 		}
+		
+
+		cout << "\n\nTwoj wybor : ";
+		cin >> option;
+		cin_check(option, 6);
+		if (option > 0 && option <= 6)
+			decision = true;
+		else
+			system("CLS");
+
 	} while (decision == false);
 	system("CLS");
 	return option;
@@ -196,7 +208,7 @@ bool Player::ask_or_not()
 // SUBFUNCTION FOR:
 
 
-short Player::other_player_asked(short &which_game, short &contra_counter2)
+short Player::other_player_asked(short *game_type, short &contra_counter2)
 {
 	string answer;
 	short decision = NULL;
@@ -227,14 +239,14 @@ short Player::other_player_asked(short &which_game, short &contra_counter2)
 			answer = "Supermord!";
 		}
 		else cout << "Blad";
-		if(which_game != 8) cout << "\n3. Durha!";
-		if(which_game != 7 && which_game != 8) cout << "\n4. Mizerka!";
+		if(*game_type != 8) cout << "\n3. Durha!";
+		if(*game_type != 7 && *game_type != 8) cout << "\n4. Mizerka!";
 
 		cout << "\n\nTwoj wybor : ";
 		
 		cin >> decision;
-		if (which_game == 8 && (decision == 3 || decision == 4)) decision = 5;
-		else if (which_game == 7 && decision == 4) decision = 5;
+		if (*game_type == 8 && (decision == 3 || decision == 4)) decision = 5;
+		else if (*game_type == 7 && decision == 4) decision = 5;
 
 		system("CLS");
 		switch (decision)
@@ -262,7 +274,7 @@ short Player::other_player_asked(short &which_game, short &contra_counter2)
 			contra_reset();
 			system("pause");
 			system("CLS");
-			which_game = 8;
+			*game_type = 8;
 			return 8;
 
 		case 4:
@@ -272,7 +284,7 @@ short Player::other_player_asked(short &which_game, short &contra_counter2)
 			contra_reset();
 			system("pause");
 			system("CLS");
-			which_game = 7;
+			*game_type = 7;
 
 			return 7;
 			break;
@@ -353,7 +365,7 @@ Card Player::which_card_you_throw( short player, short trumph)
 			show(player_cards.size(), 2);
 			cout << "Ktora, karte chcesz rzucic?\n\nTwoj wybor: ";
 			cin >> choice;
-			cin_check(choice, "NULL");
+			cin_check(choice,player_cards.size());
 
 			if (choice > player_cards.size() || choice < 1)
 			{
@@ -378,7 +390,7 @@ Card Player::which_card_you_throw( short player, short trumph)
 	}
 	}
 
-Card Player::which_card_you_throw( short player, Card &first, string& who_started_trick, short trumph)
+Card Player::which_card_you_throw( short player, Card &first, string who_started_trick, short trumph)
 {
 	vector <short> may_throw = { NULL };
 	if (player_cards.size() != 1)
@@ -411,7 +423,7 @@ Card Player::which_card_you_throw( short player, Card &first, string& who_starte
 				cout << endl << endl;
 				cout << "Ktora, karte chcesz rzucic?\n\nTwoj wybor: ";
 				cin >> choice;
-				cin_check(choice, "NULL");
+				cin_check(choice, player_cards.size());
 
 				if (choice > player_cards.size() || choice < 1)
 				{
@@ -448,7 +460,7 @@ Card Player::which_card_you_throw( short player, Card &first, string& who_starte
 			{
 				cout << "Ktora, karte chcesz rzucic?\n\nTwoj wybor: ";
 				cin >> choice;
-				cin_check(choice, "NULL");
+				cin_check(choice, player_cards.size());
 
 				if (choice > player_cards.size() || choice < 1)
 				{
@@ -475,7 +487,7 @@ Card Player::which_card_you_throw( short player, Card &first, string& who_starte
 	}
 }
 
-Card Player::which_card_you_throw (short player, Card &first, Card &second, string &who_started_trick, short trumph)
+Card Player::which_card_you_throw (short player, Card &first, Card &second, string who_started_trick, short trumph)
 {
 	vector <short> may_throw = { NULL };
 	if (player_cards.size() != 1)
@@ -510,7 +522,7 @@ Card Player::which_card_you_throw (short player, Card &first, Card &second, stri
 				cout << endl << endl;
 				cout << "Ktora, karte chcesz rzucic?\n\nTwoj wybor: ";
 				cin >> choice;
-				cin_check(choice, "NULL");
+				cin_check(choice, player_cards.size());
 
 				if (choice > player_cards.size() || choice < 1)
 				{
@@ -545,7 +557,7 @@ Card Player::which_card_you_throw (short player, Card &first, Card &second, stri
 			{
 				cout << "Ktora, karte chcesz rzucic?\n\nTwoj wybor: ";
 				cin >> choice;
-				cin_check(choice, "NULL");
+				cin_check(choice, player_cards.size());
 
 				if (choice > player_cards.size() || choice < 1)
 				{

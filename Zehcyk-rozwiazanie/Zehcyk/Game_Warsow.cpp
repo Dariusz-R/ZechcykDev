@@ -2,13 +2,6 @@
 
 using namespace std ;
 
-//Game_Warsow::Game_Warsow()
-//{
-	//players_points[] = { 0,0,0 };
-	//thrown = { NULL };
-	//players_game_warsow = { NULL };
-//}
-
 
 void Game_Warsow::share_players(Player players_game_warsow_function[])
 {
@@ -61,15 +54,15 @@ short Game_Warsow::take_and_compare(short init)
 	short which_won = NULL, subsum = NULL, a = init % 3, b = (init + 1) % 3, c = (init + 2) % 3;
 	thrown[a] = players_game_warsow[a].which_card_you_throw(0);
 	system("CLS");
-	thrown[ b ] = players_game_warsow[b].which_card_you_throw(1, thrown[a], players_game_warsow[a].name);
+	thrown[ b ] = players_game_warsow[b].which_card_you_throw(1, thrown[a], players_game_warsow[a].get_name());
 	system("CLS");
-	thrown[c] = players_game_warsow[c].which_card_you_throw(2, thrown[a], thrown[b], players_game_warsow[a].name);
+	thrown[c] = players_game_warsow[c].which_card_you_throw(2, thrown[a], thrown[b], players_game_warsow[a].get_name());
 	system("CLS");
 	which_won = compare(a,b,c);
 	subsum = thrown[0].value + thrown[1].value + thrown[2].value;
 	players_points[which_won] = players_points[which_won] + subsum ;
-	cout << "Rozpoczal " << players_game_warsow[a].name << ".\n Rzucono: " << thrown[a].symbol << "\t" << thrown[b].symbol << "\t" << thrown[c].symbol << endl;
-	cout << "Sztych zdobyl gracz " << players_game_warsow[which_won].name << " i zdobyl " << subsum << "pkt.\n";
+	cout << "Rozpoczal " << players_game_warsow[a].get_name() << ".\n Rzucono: " << thrown[a].symbol << "\t" << thrown[b].symbol << "\t" << thrown[c].symbol << endl;
+	cout << "Sztych zdobyl gracz " << players_game_warsow[which_won].get_name()<< " i zdobyl " << subsum << "pkt.\n";
 	system("PAUSE");
 	system("CLS");
 

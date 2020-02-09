@@ -101,15 +101,15 @@ short Game_Colour::take_and_compare(short init)
 	short which_won = NULL, subsum = NULL, a = init % 3, b = (init + 1) % 3, c = (init + 2) % 3;
 	thrown[a] = players_game_colour[a].which_card_you_throw( 0, get_trumph());
 	system("CLS");
-	thrown[ b ] = players_game_colour[b].which_card_you_throw( 1, thrown[a], players_game_colour[a].name, get_trumph());
+	thrown[ b ] = players_game_colour[b].which_card_you_throw( 1, thrown[a], players_game_colour[a].get_name(), get_trumph());
 	system("CLS");
-	thrown[c] = players_game_colour[c].which_card_you_throw( 2, thrown[a], thrown[b], players_game_colour[a].name, get_trumph());
+	thrown[c] = players_game_colour[c].which_card_you_throw( 2, thrown[a], thrown[b], players_game_colour[a].get_name(), get_trumph());
 	system("CLS");
 	which_won = compare(a,b,c, trumph);
 	subsum = thrown[0].value + thrown[1].value + thrown[2].value;
 	players_points[which_won] = players_points[which_won] + subsum ;
-	cout << "Rozpoczal " << players_game_colour[a].name << ". Rzucono: " << thrown[a].symbol << "\t" << thrown[b].symbol << "\t" << thrown[c].symbol << endl;
-	cout << "Sztych zdobyl gracz " << players_game_colour[which_won].name << " i zdobyl " << subsum << "pkt.\n";
+	cout << "Rozpoczal " << players_game_colour[a].get_name() << ". Rzucono: " << thrown[a].symbol << "\t" << thrown[b].symbol << "\t" << thrown[c].symbol << endl;
+	cout << "Sztych zdobyl gracz " << players_game_colour[which_won].get_name() << " i zdobyl " << subsum << "pkt.\n";
 	system("PAUSE");
 	system("CLS");
 

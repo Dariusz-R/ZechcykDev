@@ -5,15 +5,16 @@
 #include <cstdlib>
 #include <string>
 #include <Windows.h>
+#include <stdlib.h>
 
 using namespace std;
 
 
 
 void showing_txt(string);
-short cin_check(short&, string);
-string game_name(short&);
+short cin_check(short&, short);
 void contra();
 void contra_reset();
+void load_language_version(string);
 
 #endif
