@@ -11,6 +11,16 @@
 *    3. See the game rules before you will      *
 *	      made the decision.		*
 *************************************************
+	Your answer:
+Game is for three players.
+Enter name of the first player: 
+Enter name of the second player: 
+Enter name of the third player: 
+Today will play: 
+, 
+ and 
+.
+ - this are your cards.	
  - what is your action? 
 
 1. Pick Hearts
@@ -23,5 +33,9 @@
 6. Say Double to Warsow
 5. Say With Contra to Warsow
 6. Say Redouble Warsow.
-
+Your decision: 
+ - Warsow!
+ - With Warsow!
+ - Double to Warsow!
+ - Redouble to Warsow!
 

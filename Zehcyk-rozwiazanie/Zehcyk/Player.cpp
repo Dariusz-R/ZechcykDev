@@ -4,6 +4,8 @@
 #include "Functions.h"
 #include <vector>
 #include <stdlib.h>
+#include <sstream>
+#include <string>
 
 
 
@@ -12,7 +14,7 @@
 using namespace std;
 
 
-
+//void Player::set_name(string& given_name{ name = given_name; }
 string Player::get_name(){ return name; }
 
 
@@ -34,11 +36,11 @@ short Player::get_choice(){ return choice; }
 // ASKS FOR PLAYER NAME
 // SUBFUNCTION FOR: Run::meet_players()
 
-void Player::name_player(short number)
+void Player::name_player(short number, string text)
 {
-	player_number = number - 1;
-	cout << "Podaj nazwe gracza numer " << number << endl;
-	cin >> name;
+	player_number = number;
+	cout << text;
+	cin >> name; 
 
 }
 
@@ -46,36 +48,7 @@ void Player::name_player(short number)
 // SHOWS NAMES OF THE PLAYERS
 // SUBFUNCTION FOR: Run::meet_players()
 
-void Player::who_plays(short number)
-{
-	if (number == 1)
-	{
-		system("CLS");
-		cout << "Dzis zagraja : ";
-	}
-		
 
-	switch (number)
-	{
-
-	case 1:
-		cout << name << ", ";
-		break;
-
-	case 2:
-		cout << name << " i ";
-		break;
-
-	case 3:
-		cout << name << endl;
-		break;
-
-	default:
-		cout << " Wystapil blad " << endl;
-	}
-
-
-}
 
 //***************************************************************************************************************************************************************************
 // COPY CARD FROM DECK (card_to_take says which one from the deck)
@@ -101,7 +74,8 @@ void Player::sort_cards()
 
 void Player::show(short how_many, short when)
 {
-	cout << name << " to Twoje karty: \n\n";
+	extern string show_txt;
+	cout << name << show_txt << endl << endl;
 	for (int i = 0; i < how_many; i++)
 	{
 		cout << player_cards[i].symbol << "\t";
@@ -128,7 +102,7 @@ int Player::choice_game_type(short &warsow)
 {
 	short option = NULL;
 	bool decision = false;
-	extern string auct_1, auct_2, auct_3;
+	extern string auct_1, auct_2, auct_3, your_choice;
 	string file_to_use = "";
 
 	
@@ -150,7 +124,7 @@ int Player::choice_game_type(short &warsow)
 		}
 		
 
-		cout << "\n\nTwoj wybor : ";
+		cout << endl << endl << your_choice;
 		cin >> option;
 		cin_check(option, 6);
 		if (option > 0 && option <= 6)

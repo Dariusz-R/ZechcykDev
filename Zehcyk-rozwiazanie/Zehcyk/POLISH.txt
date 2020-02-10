@@ -11,6 +11,16 @@
 *		                		*
 * 3. Zobacz zasady gry nim podejmiesz decyzje.	*
 *************************************************
+	Twoja odpowiedz: 
+Gra jest trzyosobowa.
+Podaj nazwe pierwszego z graczy: 
+Podaj nazwe drugiego z graczy: 
+Podaj nazwe trzeciego z graczy: 
+Dzis zagraja: 
+, 
+ i 
+.
+ - to Twoje karty.
  - co robisz? 
 
 1. Obieram Czerwien
@@ -20,8 +30,13 @@
 
 5. Mowie Warszawa
 5. Mowie - Z Warszawa
-6. Mowie Kontra - Warszawa
-5. Mowie z Kontra - Warszawa
-6. Mowie Rekontra - Warszawa
+6. Mowie Kontra-Warszawa
+5. Mowie z Kontra-Warszawa
+6. Mowie Rekontra-Warszawa
+Twoj wybor: 
+ - Warszawa!
+ - Z Warszawa!
+ - Kontra-Warszawa!
+ - Rekontra-Warszawa!
 
 

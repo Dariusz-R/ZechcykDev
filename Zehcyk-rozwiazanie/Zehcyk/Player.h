@@ -20,7 +20,8 @@ class Player
  //**********************************************************************************************************************************************
  // ENCAPSULATION PURPOSES FUNCTIONS
 public:
-	string get_name();
+    //void set_name(string&);
+    string get_name();
 
 	void add_trick_points(short);
 	short get_trick_points();
@@ -39,8 +40,7 @@ public:
         
         
         
-    void name_player(short number) ;
-    void who_plays(short number) ;
+    void name_player(short number, string);
     void take_card(Card) ;
     void sort_cards() ;
     void show(short, short) ;

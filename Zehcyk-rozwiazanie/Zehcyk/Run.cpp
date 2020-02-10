@@ -22,7 +22,7 @@ short Run::get_game_type() { return game_type; }
 string Run::select_language() {
 	short language_pack;
 	do {
-		cout << "Please select language / Prosze, wybierz jezyk : \n\n1. POLSKI/POLISH\n2. ANGIELSKI/ENGLISH\n\nTwoj wybor: ";
+		cout << "Prosze, wybierz jezyk / Please select language : \n\n1. POLSKI/POLISH\n2. ANGIELSKI/ENGLISH\n\nTwoj wybor / Your choice : ";
 		cin >> language_pack;
 		cin_check(language_pack, 3);
 		if (language_pack == 1) { system("CLS"); return "POLISH"; }
@@ -40,9 +40,7 @@ void Run::start(string language_pack)
 
 	do
 	{
-		cout << start_menu << endl;
-		cout << "\tTwoja odpowiedz: ";
-
+		cout << start_menu;
 		cin >> want_to_play;
 		loop_choice = false;
 		cin_check(want_to_play, 3);
@@ -60,23 +58,21 @@ void Run::start(string language_pack)
 
 //***************************************************************************************************************************************************************************
 //CREATING PLAYERS (OBJECTS), ASKS THEM TO GIVE THEIR NAMES AND TO CONFIRM THAT THEY WERE PROPERLY ENTERED - SHOWS THEM ON THE SCREEN
-
-
+void Run::who_plays()
+{
+	extern string intro_1, intro_2, intro_3, intro_4;
+	system("CLS");
+	cout << intro_1 << players[0].get_name() << intro_2 << players[1].get_name() << intro_3 << players[2].get_name()  << intro_4;
+}
+extern string meet_1, meet_2, meet_3;
 
 void Run::meet_players()
 {
-	short number = NULL;
 
-	for (int i = 0; i < 3; i++)
-	{
-		number = i + 1;
-		players[i].name_player(number);
-	}
-	for (int i = 0; i < 3; i++)
-	{
-		number = i + 1;
-		players[i].who_plays(number);
-	}
+		players[0].name_player(1, meet_1);
+		players[1].name_player(2, meet_2);
+		players[2].name_player(3, meet_3);
+		who_plays();
 	Sleep(2000);
 	system("CLS");
 }

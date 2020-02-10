@@ -33,7 +33,7 @@ class Run
     //Player[] get_players();
     
 
-
+    void who_plays();
     string select_language();
         void start(string) ;
         void meet_players() ;

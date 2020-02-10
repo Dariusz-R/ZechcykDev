@@ -11,7 +11,6 @@ class Auction {
 	void increase_auction_counter();
 	void reset_auction_counter();
 
-	void first_auction();
 	
 
 
