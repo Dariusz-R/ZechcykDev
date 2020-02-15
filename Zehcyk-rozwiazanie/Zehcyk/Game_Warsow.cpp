@@ -2,7 +2,7 @@
 
 using namespace std ;
 
-
+/*
 void Game_Warsow::share_players(Player players_game_warsow_function[])
 {
 	players_game_warsow[0] = players_game_warsow_function[0]; 
@@ -78,4 +78,4 @@ short Game_Warsow::who_won()
 	who = (players_points[0] > players_points[1]) ? 0 : 1;
 	who2 = (players_points[who] > players_points[2]) ? who : 2;
 	return who2;
-}
+}*/

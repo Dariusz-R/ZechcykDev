@@ -1,0 +1,8 @@
+	*********************************************************
+    	*    Prosze, wybierz jezyk / Please select language :   *
+	*********************************************************
+	*		  1. POLSKI/POLISH		        *
+	*		  2. ANGIELSKI/ENGLISH		        *
+	*********************************************************
+		     Twoj wybor / Your choice : #
+	     Wprowadzono bledne dane. Sprobuj jeszcze raz.#	         Entered number is incorrect. Try again.#

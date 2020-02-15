@@ -19,12 +19,12 @@ public:
 	
 
 
-	void share_players(Player[]);
-	short compare(short&, short&, short&, short);
-	short take_and_compare(short);
-	short who_won();
-	void set_trumph(short&);
-	short get_trumph();
+	//void share_players(Player[]);
+	//short compare(short&, short&, short&, short);
+	//short take_and_compare(short);
+	//short who_won();
+	//void set_trumph(short&);
+	//short get_trumph();
 
 
 

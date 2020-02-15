@@ -19,15 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Auction.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="Deck.h" />
-    <ClInclude Include="Functions.h" />
     <ClInclude Include="Game_Colour.h" />
     <ClInclude Include="Game_Warsow.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Run.h" />
+    <ClInclude Include="Text.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Auction.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="Game_Colour.cpp" />
@@ -35,7 +37,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Run.cpp" />
-    <ClCompile Include="Functions.cpp" />
+    <ClCompile Include="Text.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

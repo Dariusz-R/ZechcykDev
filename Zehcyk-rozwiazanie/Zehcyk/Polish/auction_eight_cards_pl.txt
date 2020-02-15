@@ -1,0 +1,26 @@
+
+	*		     Mozliwe akcje			*
+	*********************************************************
+	*							*
+	*		 1. Zapytaj sie				*
+	*		 2. Zrezygnuj (przegrana za 2 pkt)	*
+	*		 					*
+	*********************************************************
+			     Twoja wybor: #
+
+#	*		     Mozliwe akcje			*
+	*********************************************************
+	*							*
+	*		 1. Nie kontruj. Powiedz -  Graj	*
+	*		 2. Obierz Dzwonek			*
+	*		 3. Obierz Wino				*
+	*		 4. Obierz Zoladz			*
+	*							*#
+	*		 5. Powiedz Warszawa			*#
+	*		 5. Powiedz Z Warszawa			*
+	*		 6. Powiedz Kontra-Warszawa		*#
+	*		 5. Powiedz Z Kontra-Warszawa		*
+	*		 6. Powiedz Rekontra-Warszawa		*#
+	*		 					*
+	*********************************************************
+			     Twoja wybor: #			

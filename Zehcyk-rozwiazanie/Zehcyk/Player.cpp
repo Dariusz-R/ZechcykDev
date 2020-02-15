@@ -1,20 +1,18 @@
+#include "Text.h"
 #include <iostream>
 #include "Player.h"
 #include <windows.h>
-#include "Functions.h"
 #include <vector>
 #include <stdlib.h>
 #include <sstream>
 #include <string>
 
 
-
-
-
 using namespace std;
 
 
-//void Player::set_name(string& given_name{ name = given_name; }
+
+void Player::set_name(string given_name) { name = given_name; }
 string Player::get_name(){ return name; }
 
 
@@ -36,10 +34,9 @@ short Player::get_choice(){ return choice; }
 // ASKS FOR PLAYER NAME
 // SUBFUNCTION FOR: Run::meet_players()
 
-void Player::name_player(short number, string text)
+void Player::name_player(short number)
 {
 	player_number = number;
-	cout << text;
 	cin >> name; 
 
 }
@@ -72,25 +69,64 @@ void Player::sort_cards()
 }
 
 
-void Player::show(short how_many, short when)
+void Player::show(short how_many, string when)
 {
-	extern string show_txt;
-	cout << name << show_txt << endl << endl;
-	for (int i = 0; i < how_many; i++)
-	{
-		cout << player_cards[i].symbol << "\t";
-		
-		
-	}
-	if (when == 2)
-	{
-		cout << endl;
-		for (int i = 0; i < how_many; i++)
-		{
-			cout << i+1 << "\t";
+	
+	Text::read_text(Text::A_4, 0, 1);
+	short name_center_maker = 0;
+	if (name.size() == 1) {
+		for (short i = 0; i < 27; i++) {
+			cout << " ";
+		}
+		cout << name;
+		for (short i = 0; i < 27; i++) {
+			cout << " ";
 		}
 	}
-	cout << endl << endl;
+	else if (name.size() % 2 == 1) {
+		name_center_maker = (name.size() - 1) / 2;
+		for (short i = 0; i < 27 - name_center_maker; i++) {
+			cout << " ";
+		}
+		cout << name;
+		for (short i = 0; i < 27 - name_center_maker; i++) {
+			cout << " ";
+		}
+	}
+	else if (name.size() % 2 == 0){
+		name_center_maker = name.size() / 2;
+		for (short i = 0; i < 27 - name_center_maker; i++) {
+			cout << " ";
+		}
+		cout << name;
+		for (short i = 0; i < 28 - name_center_maker; i++) {
+			cout << " ";
+		}
+	}
+	Text::read_text(Text::A_4, 1, 1);
+	for (short i = 0; i < 8; i++) {
+		if (i < how_many) cout << player_cards[i].symbol << "  ";
+		else cout << "      ";
+	}
+		
+	Text::read_text(Text::A_4, 2, 1);
+	if (when == "AUCTION") {
+		Text::read_text(Text::A_4, 5, 1);
+	}
+
+	else if (when == "GAME")
+	{
+		Text::read_text(Text::A_4, 3, 1);
+		for (short i = 0; i < 8; i++)
+		{
+			if (i < how_many) cout << i + 1 << "     ";
+			else cout << "      ";
+			
+		}
+		Text::read_text(Text::A_4,4 , 2);
+	}
+	
+	
 }
 
 //***************************************************************************************************************************************************************************
@@ -98,90 +134,18 @@ void Player::show(short how_many, short when)
 // SUBFUNCTION FOR:
 
 
-int Player::choice_game_type(short &warsow)
-{
-	short option = NULL;
-	bool decision = false;
-	extern string auct_1, auct_2, auct_3, your_choice;
-	string file_to_use = "";
-
-	
-	do
-	{
-		show(4, NULL);
-		switch (warsow) {
-		case NULL:
-			cout << name << auct_1;
-			break;
-		case 1:
-			cout << name << auct_2;
-			break;
-		case 2:
-			cout << name << auct_3;
-			break;
-		default:
-			cout << "BLAD. WARSZAWA MA ZA DUZY LICZNIK KONTR" << endl;
-		}
-		
-
-		cout << endl << endl << your_choice;
-		cin >> option;
-		cin_check(option, 6);
-		if (option > 0 && option <= 6)
-			decision = true;
-		else
-			system("CLS");
-
-	} while (decision == false);
-	system("CLS");
-	return option;
-}
 
 //***************************************************************************************************************************************************************************
 // ASKS PLAYER WHO PICKED A COLOUR IF HE WANT TO PLAY OR RESIGN
 // SUBFUNCTION FOR:
 
-bool Player::ask_or_not()
-{
-    short decision = 3 ;
 
-    do
-    {
-        show(8,NULL) ;
-        cout << endl << "\nPytasz sie, czy rezygnujesz? \n\n1. PYTAM SIE!\n2. REZYGNUJE.\n\nTwoj wybor : " ;
-        cin >> decision ;
-        system("CLS");
-        switch (decision)
-        {
-        case 1 :
-            
-            cout << name <<" - PYTAM SIE!" ;
-            Sleep(1000);
-            system("CLS");
-            return true ;
-            break ;
-
-        case 2 :
-
-            cout << name <<" - Rzuciles kartami." ;
-            return false ;
-            break ;
-
-        default:
-            cout << "Do wyboru masz opcje 1 lub 2. Wybrano opcje spoza zakresu. Jeszcze raz!" ;
-            Sleep(1000) ;
-            system("CLS") ;
-            break ;
-        }
-    }while ( decision != 1 && decision != 2 ) ;
-
-}
 
 //***************************************************************************************************************************************************************************
 // ASKS PLAYER WHAT ANSWER WILL HE GIVE TO THE PLAYER WHO PICK A COLOUR
 // SUBFUNCTION FOR:
 
-
+/*
 short Player::other_player_asked(short *game_type, short &contra_counter2)
 {
 	string answer;
@@ -339,7 +303,7 @@ Card Player::which_card_you_throw( short player, short trumph)
 			show(player_cards.size(), 2);
 			cout << "Ktora, karte chcesz rzucic?\n\nTwoj wybor: ";
 			cin >> choice;
-			cin_check(choice,player_cards.size());
+			Text::cin_check(choice,player_cards.size());
 
 			if (choice > player_cards.size() || choice < 1)
 			{
@@ -434,7 +398,7 @@ Card Player::which_card_you_throw( short player, Card &first, string who_started
 			{
 				cout << "Ktora, karte chcesz rzucic?\n\nTwoj wybor: ";
 				cin >> choice;
-				cin_check(choice, player_cards.size());
+				Text::cin_check(choice, player_cards.size());
 
 				if (choice > player_cards.size() || choice < 1)
 				{
@@ -531,7 +495,7 @@ Card Player::which_card_you_throw (short player, Card &first, Card &second, stri
 			{
 				cout << "Ktora, karte chcesz rzucic?\n\nTwoj wybor: ";
 				cin >> choice;
-				cin_check(choice, player_cards.size());
+				Text::cin_check(choice, player_cards.size());
 
 				if (choice > player_cards.size() || choice < 1)
 				{
@@ -561,4 +525,4 @@ Card Player::which_card_you_throw (short player, Card &first, Card &second, stri
 void Player::destroy_thrown_card()
 {
 	player_cards.erase(player_cards.begin() + (choice));
-}
+}*/

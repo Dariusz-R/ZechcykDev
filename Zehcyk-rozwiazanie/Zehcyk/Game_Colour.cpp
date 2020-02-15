@@ -2,7 +2,7 @@
 
 using namespace std ;
 
-void Game_Colour::set_trumph(short &trumph)
+/*void Game_Colour::set_trumph(short &trumph)
 {
 	this -> trumph = trumph;
 }
@@ -125,4 +125,4 @@ short Game_Colour::who_won()
 	who = (players_points[0] > players_points[1]) ? 0 : 1;
 	who2 = (players_points[who] > players_points[2]) ? who : 2;
 	return who2;
-}
+}*/

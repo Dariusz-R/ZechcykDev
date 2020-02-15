@@ -15,12 +15,11 @@ class Player
     vector<Card> player_cards ;
     short choice;
 
-
    
  //**********************************************************************************************************************************************
  // ENCAPSULATION PURPOSES FUNCTIONS
 public:
-    //void set_name(string&);
+    void set_name(string);
     string get_name();
 
 	void add_trick_points(short);
@@ -40,19 +39,19 @@ public:
         
         
         
-    void name_player(short number, string);
+    void name_player(short number);
     void take_card(Card) ;
     void sort_cards() ;
-    void show(short, short) ;
-    int choice_game_type(short&) ;
-    bool ask_or_not () ;
-    short other_player_asked(short*, short&) ;
-    vector <short> which_card_you_may_throw(Card&, short = NULL);
-    Card compare_two(Card&, Card&);
-    Card which_card_you_throw(short, short = NULL);
-    Card which_card_you_throw(short, Card&, string, short = NULL);
-    Card which_card_you_throw(short, Card&, Card&, string, short = NULL);
-    void destroy_thrown_card();
+    void show(short, string) ;
+    //int choice_game_type(short&) ;
+    
+    //short other_player_asked(short*, short&) ;
+    //vector <short> which_card_you_may_throw(Card&, short = NULL);
+    //Card compare_two(Card&, Card&);
+    //Card which_card_you_throw(short, short = NULL);
+    //Card which_card_you_throw(short, Card&, string, short = NULL);
+    //Card which_card_you_throw(short, Card&, Card&, string, short = NULL);
+    //void destroy_thrown_card();
 
 };
 

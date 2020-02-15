@@ -1,5 +1,7 @@
 #include <iostream>
 #include "Run.h"
+#include "Text.h"
+#include <windows.h>
 
 using namespace std;
 
@@ -19,35 +21,36 @@ short Run::get_game_type() { return game_type; }
 // USES FUNION ABOVE AND ASKS IF USER WANT TO PLAY
 
 
-string Run::select_language() {
+void Run::select_language() {
 	short language_pack;
 	do {
-		cout << "Prosze, wybierz jezyk / Please select language : \n\n1. POLSKI/POLISH\n2. ANGIELSKI/ENGLISH\n\nTwoj wybor / Your choice : ";
+		Text::load_language_version();
+		Text::read_text(Text::pl_OR_eng, 0, 1);
 		cin >> language_pack;
-		cin_check(language_pack, 3);
-		if (language_pack == 1) { system("CLS"); return "POLISH"; }
-		else if (language_pack == 2) { system("CLS"); return "ENGLISH"; }
-	} while (language_pack != 2);
+		Text::cin_check(language_pack, 2, true);
+		if (language_pack == 1) { system("CLS");  Text::set_language_version("Polish"); }
+		else if (language_pack == 2) { system("CLS");  Text::set_language_version("English");}
+	} while (language_pack == NULL);
+	Text::load_language_version();
+
 }
 
-void Run::start(string language_pack)
+void Run::start()
 {
 
 	short want_to_play = NULL;
 	bool loop_choice = false;
-	extern string start_menu;
-	load_language_version(language_pack);
 
 	do
 	{
-		cout << start_menu;
+		Text::read_text(Text::start_menu,0,1);
 		cin >> want_to_play;
 		loop_choice = false;
-		cin_check(want_to_play, 3);
+		Text::cin_check(want_to_play, 3);
 		if (want_to_play == 1) { loop_choice = true; system("CLS"); }
-		else if (want_to_play == 2) { cout << "Program zostanie zamkniety.\n"; system("pause"); exit(0); }
+		else if (want_to_play == 2) { Text::read_text(Text::start_menu, 1, 1); system("pause"); exit(0); }
 		else if (want_to_play == 3) {  
-			ShellExecute(GetDesktopWindow(), L"open", L"ZECHCYK2.pdf", NULL, NULL, SW_SHOWMAXIMIZED);
+			ShellExecute(GetDesktopWindow(), L"open", L"\\Polish\\ZECHCYK2.pdf", NULL, NULL, SW_SHOWMAXIMIZED);
 			system("CLS");
 		}
 	} while (want_to_play != 1);
@@ -60,28 +63,29 @@ void Run::start(string language_pack)
 //CREATING PLAYERS (OBJECTS), ASKS THEM TO GIVE THEIR NAMES AND TO CONFIRM THAT THEY WERE PROPERLY ENTERED - SHOWS THEM ON THE SCREEN
 void Run::who_plays()
 {
-	extern string intro_1, intro_2, intro_3, intro_4;
 	system("CLS");
-	cout << intro_1 << players[0].get_name() << intro_2 << players[1].get_name() << intro_3 << players[2].get_name()  << intro_4;
+	for (short i = 0; i < 3; i++) {
+		Text::read_text(Text::start_menu, 5 + i, 1);
+		cout << players[i].get_name();
+	}
+	Text::read_text(Text::start_menu, 8, 1);
+	system("pause");
 }
 extern string meet_1, meet_2, meet_3;
 
 void Run::meet_players()
 {
-
-		players[0].name_player(1, meet_1);
-		players[1].name_player(2, meet_2);
-		players[2].name_player(3, meet_3);
-		who_plays();
-	Sleep(2000);
+	for (short i = 0; i < 3; i++) {
+		Text::read_text(Text::start_menu, i + 2, 1);
+		players[i].name_player(i + 1);
+	}
+	who_plays();
 	system("CLS");
 }
 
 //***************************************************************************************************************************************************************************
 // PUTS DATA TO THE EMPTY CARD OBJECTS
 
-Card deck_1[24];
-Card* deck_2[24];
 
 
 
@@ -91,11 +95,9 @@ void Run::create_cards()
 	char symbol[6] = { '9', 'J', 'D', 'K', '1', 'A' };
 	char colour[4] = { '\3', '\4', '\6', '\5' };
 
-	for (short i = 0; i < 4; i++)
-	{
-		for (short j = 0; j < 6; j++)
-		{
-			deck_1[6 * i + j].create_card((6 * i + j), values[j], symbol[j], colour[i], i+1);
+	for (short i = 0; i < 4; i++){
+		for (short j = 0; j < 6; j++){
+			deck_pattern[6 * i + j].create_card((6 * i + j), values[j], symbol[j], colour[i], i+1);
 			//cout <<endl << deck_1[ 6 * i + j ].symbol <<"  " << deck_1[ 6 * i + j ].value << " " << deck_1[6*i+j].colour;       //TEST CZY PRZETASOWANO KARTY
 		}
 	}
@@ -107,26 +109,23 @@ void Run::create_cards()
 
 void Run::shuffle_cards()
 {
-	srand(time(NULL));
-	int fate[24];
 
-	for (int i = 0; i < 24; i++)
-	{
+	
+	int fate[24] = {};
 
+	for (int i = 0; i < 24; i++){
 		fate[i] = rand() % 24;
+		cout << fate[i] << endl;
 		deck_2[i] = &deck_1[fate[i]];
-		for (int j = 0; j < i; j++)
-		{
+		for (int j = 0; j < i; j++){
 
-			if (fate[i] == fate[j])
-			{
+			if (fate[i] == fate[j]){
 				i--;
 				j = i;
-
 			}
-
 		}
 	}
+	system("pause");
 }
 
 
@@ -145,7 +144,7 @@ void Run::give_cards_to_players()
 	}
 }
 
-
+/*
 //***************************************************************************************************************************************************************************
 void Run::check_if(short &what, short who, short count)
 {
@@ -160,174 +159,7 @@ void Run::check_if(short &what, short who, short count)
 
 }
 
-short Run::which_gametype()
-{
-	for (int i = 0; i < 3; i++)
-	{
-		set_game_type(players[i].choice_game_type(warsow));
-		if (get_game_type() == 5)
-		{
-			switch (warsow)
-			{
-			case NULL:
-				warsow++;
-				cout << players[i].get_name() << " - Warszawa!\n\n";
-				break;
 
-			case 1:
-				cout << players[i].get_name() << " - Z Warszawa!\n\n";
-				break;
-
-			case 2:
-				cout << players[i].get_name() << " - Z Kontra-Warszawa\n\n";
-				break;
-
-			default:
-				cout << "Blad w switchu 1 w run.cpp" << endl << endl;
-				break;
-			}
-
-			system("Pause");
-			system("ClS");
-
-		}
-		else if (get_game_type() == 6)
-		{
-			switch (warsow)
-			{
-
-			case 1:
-				cout << players[i].get_name() << " - Kontra-Warszawa!\n\n";
-				break;
-
-			case 2:
-				cout << players[i].get_name() << " - Rekontra-Warszawa!\n\n";
-				break;
-
-			default:
-				cout << "Blad w switchu 2 w run.cpp" << endl << endl;
-				system("Pause");
-				exit(0);
-
-			}
-
-			system("Pause");
-			system("ClS");
-			which_player = i;
-			warsow++;
-			break;
-		}
-		else if (get_game_type() == 1 || get_game_type() == 2 || get_game_type() == 3 || get_game_type() == 4)
-		{
-			which_player = i;
-			cout << "Gracz " << players[i].get_name() << " obral kolor! ";
-			break;
-		}
-		
-	}
-
-	if (get_game_type() == 1 || get_game_type() == 2 || get_game_type() == 3 || get_game_type() == 4)
-	{
-		if (players[which_player].ask_or_not() == true)
-		{	
-			short second_option = NULL;
-			extern short contra_counter;
-			do
-			{
-				second_option = players[(which_player + 1) % 3].other_player_asked(get_game_type_pointer(), contra_counter);
-				check_if(second_option, ((which_player + 1) % 3) , contra_counter);
-				if (second_option == 1 && contra_counter < 5)
-				{
-					second_option = players[(which_player + 2) % 3].other_player_asked(get_game_type_pointer(), contra_counter);
-					check_if(second_option, ((which_player + 2) % 3), contra_counter);
-				}
-				if (second_option == 2 && contra_counter < 5)
-				{
-					second_option = players[which_player % 3].other_player_asked(get_game_type_pointer(), contra_counter);
-					check_if(second_option, (which_player % 3), contra_counter);
-				}
-			} while (second_option == 2);
-			if (get_game_type() == 7)
-			{
-				do
-				{
-					second_option = players[(which_player + 1) % 3].other_player_asked(get_game_type_pointer(), contra_counter);
-					check_if(second_option, ((which_player + 1) % 3), contra_counter);
-					if (second_option == 1 && contra_counter < 5)
-					{
-						second_option = players[(which_player + 2) % 3].other_player_asked(get_game_type_pointer(), contra_counter);
-						check_if(second_option, ((which_player + 2) % 3), contra_counter);
-					}
-					if (second_option == 2 && contra_counter < 5)
-					{
-						second_option = players[which_player % 3].other_player_asked(get_game_type_pointer(), contra_counter);
-						check_if(second_option, (which_player % 3), contra_counter);
-					}
-				} while (second_option == 2);
-			}
-			if (get_game_type() == 8)
-			{
-				do
-				{
-					second_option = players[(which_player + 1) % 3].other_player_asked(get_game_type_pointer(), contra_counter);
-					check_if(second_option, ((which_player + 1) % 3), contra_counter);
-					if (second_option == 1 && contra_counter < 5)
-					{
-						second_option = players[(which_player + 2) % 3].other_player_asked(get_game_type_pointer(), contra_counter);
-						check_if(second_option, ((which_player + 2) % 3), contra_counter);
-					}
-					if (second_option == 2 && contra_counter < 5)
-					{
-						second_option = players[which_player % 3].other_player_asked(get_game_type_pointer(), contra_counter);
-						check_if(second_option, (which_player % 3), contra_counter);
-					}
-				} while (second_option == 2);
-			}
-
-
-		}
-
-
-
-	}
-
-
-
-	else if (get_game_type() == 5 || get_game_type() == 6)
-	{
-
-		switch (warsow)
-		{
-		case 1:
-			cout << "Gramy w Warszawe. Zaczyna gracz " << players[which_player].get_name() << endl << endl;
-			break;
-
-		case 2:
-			cout << "Gramy w Kontre-Warszawe. Zaczyna gracz " << players[which_player].get_name() << endl << endl;
-			break;
-
-		case 3:
-			cout << "Gramy w Rekontre-Warszawe. Zaczyna gracz " << players[which_player].get_name() << endl << endl;
-			break;
-
-		default:
-			cout << "Blad w 3 switchu w run.cpp" << endl << endl;
-			break;
-
-		}
-
-	}
-
-
-
-
-
-
-
-
-
-	return get_game_type();
-}
 
 void Run::run_game(short game_to_run)
 {
@@ -392,3 +224,20 @@ void Run::run_game(short game_to_run)
 	}
 }
 
+*/
+void Run::run_general() {
+	select_language();
+	start();
+	meet_players();
+	create_cards();
+	bool play = false;
+	do {
+		shuffle_cards();
+		give_cards_to_players();
+		Auction auction;
+		auction.share_players(players);
+		auction.game_type_auction_four_cards();
+		play = auction.ask_or_not();
+		auction.game_type_auction_eight_cards();
+	} while (play == false);
+}

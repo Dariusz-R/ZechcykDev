@@ -17,10 +17,10 @@ public:
 
 	//Methods:
 	//Game_Warsow();
-	void share_players(Player[]);
-	short compare(short&, short&, short&);
-	short take_and_compare(short);
-	short who_won();
+	//void share_players(Player[]);
+	//short compare(short&, short&, short&);
+	//short take_and_compare(short);
+	//short who_won();
 
 
 
