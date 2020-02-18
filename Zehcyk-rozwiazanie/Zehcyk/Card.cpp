@@ -7,7 +7,23 @@
 
 using namespace std;
 
-void Card::create_card(short i, char val, char sym, char col, short col2)
+char Card::symbol_pattern[6] = { '9', 'J', 'D', 'K', '1', 'A' };
+char Card::colour_pattern[4] = { '\3', '\4', '\6', '\5' };
+short colour;
+
+Card::Card(short which) {
+
+	colour = (((which - (which % 6)) / 6 ) + 1);
+
+	symbol[0] = colour_pattern[(which - (which % 6))/6];
+	symbol[1] = ' ';
+	symbol[2] = symbol_pattern[which % 6];
+	if (symbol[2] == '1') { symbol[3] = '0'; }
+	else { symbol[3] = ' '; }
+	symbol[4] = 0;
+}
+
+/*void Card::create_card(short i, char val, char sym, char col, short col2)
 {
 	if ((i > 23) || (i < 0))
 		cout << "Error, cards were not created." << endl;
@@ -48,8 +64,8 @@ void Card::create_card(short i, char val, char sym, char col, short col2)
 
 
 
-
-}
+	
+}*/
 
 //#endif
 

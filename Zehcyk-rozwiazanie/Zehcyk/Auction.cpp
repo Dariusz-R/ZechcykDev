@@ -6,35 +6,48 @@
 
 using namespace std;
 
-
+short Auction::player_after_player_with_initiative(short which_after) {
+		return ((player_with_initiative + which_after) % 3);
+}
 
 void Auction::contra(short& who ){
 	player_with_initiative = who;
 	auction_counter++;
 }
-void Auction::set_game_type_auct(short type) { game_type_auct = type; }
-short Auction::get_game_type_auct() { return game_type_auct; }
-void Auction::reset_game_type_auct() { game_type_auct = 0;  }
-short Auction::get_auction_counter() { return auction_counter; }
-void Auction::increment_auction_counter() { auction_counter++; }
-void Auction::reset_auction_counter() { auction_counter = 0; }
-void Auction::set_player_with_initiative(short the_man) { player_with_initiative = the_man; }
-short Auction::get_player_with_initiative() { return player_with_initiative; }
-void Auction::set_temp_string(string temp) { temp_string = temp; }
-string Auction::get_temp_string() { return temp_string; }
-void Auction::reset_temp_string() { temp_string = ""; }
-void Auction::set_temp_string_2(string temp_2) { temp_string_2 = temp_2; }
-string Auction::get_temp_string_2() { return temp_string_2; }
-void Auction::reset_temp_string_2() { temp_string_2 = ""; }
+short Auction::get_game_type_auct() { 
+	return game_type_auct; 
+}
+short Auction::get_auction_counter() { 
+	return auction_counter; 
+}
 
-void Auction::reset_player_with_initiative() { player_with_initiative = 10; } // player numbers : 0,1,2 - NULL is not the best option
 
-void Auction::share_players(Player *players_adress)
+short Auction::get_player_with_initiative() { 
+	return player_with_initiative;
+}
+
+void Auction::reset_private_variables() {
+	auction_counter = 0;
+	game_type_auct = 0;
+	player_with_initiative = 0;
+	auction_log = "";
+	log_counter = 0;
+}
+
+
+Auction::Auction(Player *players_adress)
 {
+	auction_counter = 0;
+	game_type_auct = 0;
+	player_with_initiative = 0;
+	auction_log = "";
+	log_counter = 0;
+
 	players_auct[0] = &players_adress[0];
 	players_auct[1] = &players_adress[1];
 	players_auct[2] = &players_adress[2];
 }
+
 
 void Auction::history_actualization(short who, short what , short what2)
 {
@@ -46,25 +59,23 @@ void Auction::history_actualization(short who, short what , short what2)
 	auction_log += Text::log_frame[3];
 }
 
-string Auction::read_auction_log() {
-	return auction_log;
-}
 
 
-short Auction::game_type_auction_four_cards()
+string Auction::first_auction_player_see_four_cards(short first_player_this_round_function)
 {
-	short choice = NULL, how_many_options = NULL;
+	short choice = 0, how_many_options = 0;
 	log_counter = 0;
-	reset_auction_counter();
-
+	auction_counter = 0;
+	player_with_initiative = first_player_this_round_function;
+	
 	for (short i = 0; i < 3; i++) {
 		do {
+		
 
-
-			system("CLS");
+			players_auct[player_after_player_with_initiative(i)]->sort_cards("FOUR_CARDS");
 			if (i > 0) {
 				Text::read_text(Text::log_frame, 0, 2);
-				cout << read_auction_log();
+				cout << auction_log;
 			}
 			players_auct[i]->show(4, "AUCTION");
 			switch (auction_counter) {
@@ -96,7 +107,7 @@ short Auction::game_type_auction_four_cards()
 			player_with_initiative = i;
 			auction_counter = 0;
 			game_type_auct = choice;
-			return choice; 
+			return "COLOUR";
 		}
 		else if (choice == 5 ) {
 			history_actualization(i, auction_counter);
@@ -107,19 +118,24 @@ short Auction::game_type_auction_four_cards()
 				contra(i);
 		}
 	} 
-	game_type_auct = 5;
-	return 5;
+	game_type_auct = choice;
+	return "WARSOW";
 }
 
-bool Auction::ask_or_not()
+bool Auction::player_see_eight_cards_decision_play_or_resign()
 {
 	short decision = NULL;
+
+	for (short i = 0; i < 3; i++) {
+		players_auct[i]->sort_cards("EIGHT_CARDS");
+	}
+
 
 	do
 	{
 		system("CLS");
 		Text::read_text(Text::log_frame, 0, 2);
-		read_auction_log();
+		cout << auction_log;
 		players_auct[player_with_initiative]->show(8, "AUCTION");
 		Text::read_text(Text::A_8, 0, 1);
 		cin >> decision;
@@ -127,8 +143,8 @@ bool Auction::ask_or_not()
 		system("CLS");
 	
 		if (decision == 1) {
-			history_actualization(player_with_initiative, 10 , 6 + game_type_auct);
-			increment_auction_counter();
+			history_actualization(player_with_initiative, 10 , 5 + game_type_auct);
+			auction_counter++;
 			system("pause");
 			system("CLS");
 			return true;
@@ -138,26 +154,114 @@ bool Auction::ask_or_not()
 			Text::read_text(Text::log_message, 17, 1);
 			cout << players_auct[player_with_initiative]->get_name();
 			Text::read_text(Text::log_message, 18, 1);
-			system("pause");
+			for (short i = 0; i < 3; i++) {
+				players_auct[i]->throw_out_all_remain_cards();
+			}
 			return false;
 		}
 	} while (decision != 1 && decision != 2);
 }
 
-short Auction::game_type_auction_eight_cards()
-{
-	for (int i = 0; i < 3; i++)
-	{
-		system("CLS");
-		if (i > 0) {
-			Text::read_text(Text::log_frame, 0, 2);
-			cout << read_auction_log();
-		}
-		players_auct[i]->show(8, "AUCTION");
-		Text::read_text(Text::A_4, 10, 1);
-		
 
+short Auction::subfunction(short who) {
+	short choice = 0;
+	short how_many_options = 0;
+
+	do {
+		system("CLS");
+		Text::read_text(Text::log_frame, 0, 2);
+		cout << auction_log;
+		players_auct[who]->show(8, "AUCTION");
+		Text::read_text(Text::A_8, 2, 2);
+		switch (auction_counter) {
+		case 1:
+			Text::read_text(Text::A_8, 4, 1);
+			break;
+		case 2:
+			Text::read_text(Text::A_8, 5, 1);
+			break;
+		case 3:
+			Text::read_text(Text::A_8, 6, 1);
+			break;
+		case 4:
+			Text::read_text(Text::A_8, 7, 1);
+			break;
+		case 5:
+			Text::read_text(Text::A_8, 8, 1);
+			break;
+		default:
+			cout << "Bledna wartosc auction_counter" << endl;
+			system("pause");
+			break;
+		}
+		if (game_type_auct != 7 && game_type_auct != 8) {
+			Text::read_text(Text::A_8, 9, 2);
+			how_many_options = 4;
+		}
+		else if (game_type_auct != 7) {
+			Text::read_text(Text::A_8, 9, 1);
+			how_many_options = 3;
+		}
+		else how_many_options = 2;
+		Text::read_text(Text::A_8, 11, 1);
+		cin >> choice;
+		Text::cin_check(choice, how_many_options);
+	} while (choice == 0);
+	return choice;
+}
+
+void Auction::breaking_colour(short &who) {
+
+	player_with_initiative = player_after_player_with_initiative(who);
+	agree_to_play_on_current_terms = 0;
+	auction_counter = 1;
+	who = 1;
+}
+
+short Auction::players_see_eight_cards_decision_contra_misery_durh()
+{
+	agree_to_play_on_current_terms = 0;
+
+	for (short j = 0; j < 3; j++) {
+		players_auct[j]->sort_cards("EIGHT_CARDS");
 	}
+	short i = 1; 
+	do {
+	
+		switch (subfunction ( player_after_player_with_initiative( i ) ))
+		{
+		case 1:
+			agree_to_play_on_current_terms++;
+			history_actualization(player_after_player_with_initiative(i), 21);
+			if (agree_to_play_on_current_terms == 2 || (agree_to_play_on_current_terms == 1 && player_with_initiative == player_after_player_with_initiative(i))) {
+				cout << "GRAMY HEJ HO!" << endl;
+				system("pause");
+			}
+			i++;
+			break;
+		case 2:
+			history_actualization(player_after_player_with_initiative(i), 11 + auction_counter);
+			auction_counter++; 
+			agree_to_play_on_current_terms = 0;
+			if (i == 0) {
+				i = 1;
+			} else i = 0;
+			break;
+		case 3:
+			history_actualization(player_after_player_with_initiative(i), 19);
+			breaking_colour(i);
+			game_type_auct = 7;
+			break;
+		case 4:
+			history_actualization(player_after_player_with_initiative(i), 20);
+			breaking_colour(i);
+			game_type_auct = 8;
+			break;
+		}
+	} while (auction_counter < 6);
+
+		cout << "gramy hej ho";
+	system("pause");
 
 	/*if (get_game_type() == 1 || get_game_type() == 2 || get_game_type() == 3 || get_game_type() == 4)
 	{

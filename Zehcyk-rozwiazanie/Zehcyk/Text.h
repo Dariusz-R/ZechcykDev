@@ -19,6 +19,7 @@ class Text
 	static vector <string> A_8;
 
 	static void set_language_version(string);
+	static void placing_text_in_center_of_the_frame(string&, short&, string = "");
 		static short cin_check(short&, short, bool = false);
 		static void load_language_version();
 		static void read_text(vector<string>, short, short);

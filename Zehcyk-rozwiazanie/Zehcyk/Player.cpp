@@ -10,25 +10,40 @@
 
 using namespace std;
 
+Player::Player() {
+	string name = "";
+	short player_number = 0;
+	short trick_points = 0; 
+	short game_points = 0;
+}
 
+void Player::set_name(string given_name) { 
+	name = given_name; 
+}
+string Player::get_name() {
+	return name;
+}
+void Player::throw_out_all_remain_cards(short how_many) {
+	for (short i = 0; i < how_many; i++) {
+		player_cards.pop_back();
+	}
+}
 
-void Player::set_name(string given_name) { name = given_name; }
-string Player::get_name(){ return name; }
-
-
-void Player::add_trick_points(short points) { trick_points += points; }
-short Player::get_trick_points(){ return trick_points; }
-void Player::reset_trick_points() { trick_points = NULL; }
+void Player::add_trick_points(short points) { 
+	trick_points += points; 
+}
+short Player::get_trick_points(){ 
+	return trick_points; 
+}
+void Player::reset_trick_points() { 
+	trick_points = NULL; 
+}
 
 void Player::add_game_points(short points) { trick_points += points; }
 short Player::get_game_points(){ return game_points; }
 
 void Player::set_player_number(short number) { player_number = number; }
 short Player::get_player_number(){ return player_number; }
-
-
-void Player::set_choice(short option) { choice = option;  }
-short Player::get_choice(){ return choice; }
 
 //***************************************************************************************************************************************************************************
 // ASKS FOR PLAYER NAME
@@ -51,21 +66,88 @@ void Player::name_player(short number)
 // COPY CARD FROM DECK (card_to_take says which one from the deck)
 // SUBFUNCTION FOR: Run::give_cards_to_players()
 
-void Player::take_card(Card card_to_take)
+void Player::take_card(const Card* card_to_take)
 {
-	player_cards.push_back(card_to_take);
+	player_cards.push_back( card_to_take );
+	//cout << " U playera" << player_cards.back() << endl;
+	//system("pause");
 }
 
 //***************************************************************************************************************************************************************************
 // SORT (BUBBLE SORT) CARDS IN PLAYERS HAND TO MAKE IT EASYER TO READ
 // SUBFUNCTION FOR: Run::give_cards_to_players()
 
-void Player::sort_cards()
+void Player::sort_cards(string situation)
 {
-	for (short i = 0; i < 8; i++)
-		for (short  j = 1; j < (8 - i); j++)
-			if (player_cards[j - 1].sort_value > player_cards[j].sort_value)
-				swap(player_cards[j - 1], player_cards[j]);
+	short how_many_cards = 4;
+	short sort_value[8];
+	if (situation == "FOUR_CARDS") { 
+		how_many_cards = 4;
+	}
+
+	else if ( situation == "EIGHT_CARDS" || situation == "MISERY"){
+		how_many_cards = 8; 
+	}
+
+	for (short i = 0; i < how_many_cards; i++) {
+		switch (player_cards[i]->colour) {
+		case 1:
+			break;
+		case 2:
+			sort_value[i] += 20;
+			break;
+		case 3:
+			sort_value[i] += 40;
+			break;
+		case 4:
+			sort_value[i] += 60;
+			break;
+		default:
+			cout << "BLAD SORTOWANIA" << endl << endl;
+			break;
+		}
+		switch (player_cards[i]->symbol[2]) {
+		case '9':
+			break;
+		case 'J':
+			sort_value[i] += 2;
+			break;
+		case 'D':
+			sort_value[i] += 3;
+			break;
+		case 'K':
+			sort_value[i] += 4;
+			break;
+		case '1':
+			if (situation == "MISERY") sort_value[i] += 1;
+			else sort_value[i] += 10;
+			break;
+		case 'A':
+			sort_value[i] += 11;
+			break;
+		default:
+			cout << "BLAD2 PODCZAS SORTOWANIA" << endl << endl;
+			break;
+		}
+	}
+
+	bool swapped;
+
+	for (short i = 0; i < how_many_cards - 1; i++)
+	{
+		swapped = false;
+		for (short j = 0; j < how_many_cards - i - 1; j++)
+		{
+			if (sort_value[j] > sort_value[j + 1])
+			{
+				swap(sort_value[j], sort_value[j + 1]);
+				swap(player_cards[j], player_cards[j + 1]);
+				swapped = true;
+			}
+		}
+		if (swapped == false)
+			break;
+	}
 }
 
 
@@ -73,39 +155,18 @@ void Player::show(short how_many, string when)
 {
 	
 	Text::read_text(Text::A_4, 0, 1);
-	short name_center_maker = 0;
-	if (name.size() == 1) {
-		for (short i = 0; i < 27; i++) {
-			cout << " ";
-		}
-		cout << name;
-		for (short i = 0; i < 27; i++) {
-			cout << " ";
-		}
-	}
-	else if (name.size() % 2 == 1) {
-		name_center_maker = (name.size() - 1) / 2;
-		for (short i = 0; i < 27 - name_center_maker; i++) {
-			cout << " ";
-		}
-		cout << name;
-		for (short i = 0; i < 27 - name_center_maker; i++) {
-			cout << " ";
-		}
-	}
-	else if (name.size() % 2 == 0){
-		name_center_maker = name.size() / 2;
-		for (short i = 0; i < 27 - name_center_maker; i++) {
-			cout << " ";
-		}
-		cout << name;
-		for (short i = 0; i < 28 - name_center_maker; i++) {
-			cout << " ";
-		}
+	short letters_per_side = 0;
+	if (name.size() % 2 == 1) {
+		letters_per_side = (name.size() - 1) / 2;
+		Text::placing_text_in_center_of_the_frame(name, letters_per_side);
+	} else if (name.size() % 2 == 0){
+		letters_per_side = name.size() / 2;
+		Text::placing_text_in_center_of_the_frame(name, letters_per_side, "EVEN");
 	}
 	Text::read_text(Text::A_4, 1, 1);
 	for (short i = 0; i < 8; i++) {
-		if (i < how_many) cout << player_cards[i].symbol << "  ";
+		if (i < how_many) 
+			cout << player_cards[i]->symbol << "  ";
 		else cout << "      ";
 	}
 		

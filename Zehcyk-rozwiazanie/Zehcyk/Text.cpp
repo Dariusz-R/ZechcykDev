@@ -12,7 +12,9 @@ vector <string> Text::log_frame;
 vector <string> Text::log_message;
 string Text::language_version;
 
-void Text::set_language_version(string lang) { language_version = lang; }
+void Text::set_language_version(string lang) { 
+	language_version = lang; 
+}
 
 
 void Text::read_text(vector <string> what, short begin, short end) {
@@ -35,7 +37,7 @@ short Text::cin_check(short& cin_value , short range, bool first_menu)
 		if (cin.fail() || cin_value > range || cin_value < 1)
 		{
 			cin.clear();
-			cin.ignore(100, '\n');
+			cin.ignore(100, '\n'); ///// !!!!!!!!!!!!!!!!!!!!!!1
 			system("CLS");
 			if (first_menu == true) {
 				read_text(pl_OR_eng, 1, 1);
@@ -55,7 +57,7 @@ short Text::cin_check(short& cin_value , short range, bool first_menu)
 			}
 			system("pause");
 			system("CLS");
-			return cin_value = NULL;
+			return cin_value = 0;
 		}
 		else return cin_value;
 	}
@@ -109,6 +111,20 @@ void Text::load_language_version()
 }
 
 
+void Text::placing_text_in_center_of_the_frame( string &name_of_the_player, short &letters_per_side, string word) {
+	
+	short one_if_even = 0;
+	if (word == "EVEN")
+		one_if_even = 1;
+
+	for (short i = 0; i < 27 - letters_per_side; i++) {
+		cout << " ";
+	}
+	cout << name_of_the_player;
+	for (short i = 0; i < 27 + one_if_even - letters_per_side; i++) {
+		cout << " ";
+	}
+}
 
 
 
