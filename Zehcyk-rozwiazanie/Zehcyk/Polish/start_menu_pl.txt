@@ -19,12 +19,19 @@
 		      Program zostanie zamkniety.
 		      #
 		         Gra jest trzyosobowa.
-		   Podaj nazwe pierwszego z graczy: 
+			   Przedstw graczy
+	    [Nazwa gracza moze miec maksymalnie 35 znakow]
+
+		   Gracz numer jeden: 
 		 	 #
-		   Podaj nazwe drugiego z graczy: 
+		   Gracz numer dwa: 
 			 #
-		   Podaj nazwe trzeciego z graczy:
+		   Gracz numer trzy:
 			 #			
-		        Dzis zagraja: #, # i #.
+		            Dzis zagraja:
+ 
+			 #
+			 #
+			 #
 		      
-		      #
+		      #	 Wprowadzona nazwa gracza jest za dluga. Sprobuj ponownie.#

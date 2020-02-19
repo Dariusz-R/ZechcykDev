@@ -64,7 +64,7 @@ short Text::cin_check(short& cin_value , short range, bool first_menu)
 }
 
 
-void Text::load_language_file( vector <string> &vector_name, string file_name ) {
+void Text::load_language_file( vector <string> &vector_name, string file_name , char delim) {
 
 	string line;
 	fstream file;
@@ -90,7 +90,7 @@ void Text::load_language_file( vector <string> &vector_name, string file_name ) 
 		cout << "Blad podczas otwierania skryptu." << endl << endl;
 		exit(0);
 	}
-	while (getline(file, line, '#'))
+	while (getline(file, line, delim))
 	{
 		vector_name.push_back(line);
 	}
@@ -104,7 +104,7 @@ void Text::load_language_version()
 	else {
 		load_language_file(start_menu, "start_menu_pl.txt");
 		load_language_file(log_frame, "auction_log_frame_pl.txt");
-		load_language_file(log_message, "auction_log_message_pl.txt");
+		load_language_file(log_message, "auction_log_message_pl.txt", '\n');
 		load_language_file(A_4, "auction_four_cards_pl.txt");
 		load_language_file(A_8, "auction_eight_cards_pl.txt");
 	}

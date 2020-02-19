@@ -7,86 +7,61 @@
 #include <sstream>
 #include <string>
 
-
 using namespace std;
 
 Player::Player() {
 	string name = "";
-	short player_number = 0;
-	short trick_points = 0; 
-	short game_points = 0;
+	trick_points = 0; 
+	game_points = 0;
 }
 
-void Player::set_name(string given_name) { 
-	name = given_name; 
+
+
+void Player::name_player(short text_line_number) {
+	string name_to_pass = "";
+	bool incorrect_name = true;
+	do {
+		Text::read_text(Text::start_menu, text_line_number, 1);
+		getline(cin >> ws, name_to_pass, '\n');
+		if (name_to_pass.size() < 35)
+			incorrect_name = false;
+		else {
+			system("CLS");
+			cout << endl;
+			Text::read_text(Text::start_menu, 9, 1);
+			cout << endl << endl << "                    ";
+			system("Pause");
+			system("CLS");
+		}
+
+	} while (incorrect_name == true);
+	name = name_to_pass;
 }
+
+
+
 string Player::get_name() {
 	return name;
 }
-void Player::throw_out_all_remain_cards(short how_many) {
-	for (short i = 0; i < how_many; i++) {
-		player_cards.pop_back();
-	}
+
+
+
+void Player::take_card(const Card* card_to_take) {
+	player_cards.push_back(card_to_take);
 }
 
-void Player::add_trick_points(short points) { 
-	trick_points += points; 
-}
-short Player::get_trick_points(){ 
-	return trick_points; 
-}
-void Player::reset_trick_points() { 
-	trick_points = NULL; 
-}
 
-void Player::add_game_points(short points) { trick_points += points; }
-short Player::get_game_points(){ return game_points; }
-
-void Player::set_player_number(short number) { player_number = number; }
-short Player::get_player_number(){ return player_number; }
-
-//***************************************************************************************************************************************************************************
-// ASKS FOR PLAYER NAME
-// SUBFUNCTION FOR: Run::meet_players()
-
-void Player::name_player(short number)
-{
-	player_number = number;
-	cin >> name; 
-
-}
-
-//***************************************************************************************************************************************************************************
-// SHOWS NAMES OF THE PLAYERS
-// SUBFUNCTION FOR: Run::meet_players()
-
-
-
-//***************************************************************************************************************************************************************************
-// COPY CARD FROM DECK (card_to_take says which one from the deck)
-// SUBFUNCTION FOR: Run::give_cards_to_players()
-
-void Player::take_card(const Card* card_to_take)
-{
-	player_cards.push_back( card_to_take );
-	//cout << " U playera" << player_cards.back() << endl;
-	//system("pause");
-}
-
-//***************************************************************************************************************************************************************************
-// SORT (BUBBLE SORT) CARDS IN PLAYERS HAND TO MAKE IT EASYER TO READ
-// SUBFUNCTION FOR: Run::give_cards_to_players()
 
 void Player::sort_cards(string situation)
 {
 	short how_many_cards = 4;
 	short sort_value[8];
-	if (situation == "FOUR_CARDS") { 
+	if (situation == "FOUR_CARDS") {
 		how_many_cards = 4;
 	}
 
-	else if ( situation == "EIGHT_CARDS" || situation == "MISERY"){
-		how_many_cards = 8; 
+	else if (situation == "EIGHT_CARDS" || situation == "MISERY") {
+		how_many_cards = 8;
 	}
 
 	for (short i = 0; i < how_many_cards; i++) {
@@ -151,25 +126,27 @@ void Player::sort_cards(string situation)
 }
 
 
+
 void Player::show(short how_many, string when)
 {
-	
+
 	Text::read_text(Text::A_4, 0, 1);
 	short letters_per_side = 0;
 	if (name.size() % 2 == 1) {
 		letters_per_side = (name.size() - 1) / 2;
 		Text::placing_text_in_center_of_the_frame(name, letters_per_side);
-	} else if (name.size() % 2 == 0){
+	}
+	else if (name.size() % 2 == 0) {
 		letters_per_side = name.size() / 2;
 		Text::placing_text_in_center_of_the_frame(name, letters_per_side, "EVEN");
 	}
 	Text::read_text(Text::A_4, 1, 1);
 	for (short i = 0; i < 8; i++) {
-		if (i < how_many) 
+		if (i < how_many)
 			cout << player_cards[i]->symbol << "  ";
 		else cout << "      ";
 	}
-		
+
 	Text::read_text(Text::A_4, 2, 1);
 	if (when == "AUCTION") {
 		Text::read_text(Text::A_4, 5, 1);
@@ -182,120 +159,54 @@ void Player::show(short how_many, string when)
 		{
 			if (i < how_many) cout << i + 1 << "     ";
 			else cout << "      ";
-			
+
 		}
-		Text::read_text(Text::A_4,4 , 2);
+		Text::read_text(Text::A_4, 4, 2);
 	}
-	
-	
+
+
 }
 
-//***************************************************************************************************************************************************************************
-// ASKS PLAYER IF HE WANT TO PICK A COLUR OR DECLARE "WARSAW"
-// SUBFUNCTION FOR:
+
+
+void Player::throw_out_all_remain_cards() {
+	player_cards.clear();
+}
 
 
 
-//***************************************************************************************************************************************************************************
-// ASKS PLAYER WHO PICKED A COLOUR IF HE WANT TO PLAY OR RESIGN
-// SUBFUNCTION FOR:
+void Player::add_game_points(short points) {
+	trick_points += points; 
+}
 
 
 
-//***************************************************************************************************************************************************************************
-// ASKS PLAYER WHAT ANSWER WILL HE GIVE TO THE PLAYER WHO PICK A COLOUR
-// SUBFUNCTION FOR:
+short Player::get_game_points(){ 
+	return game_points; 
+}
+
+
+
+void Player::add_trick_points(short points) {
+	trick_points += points;
+}
+
+
+
+short Player::get_trick_points() {
+	return trick_points;
+}
+
+
+
+void Player::reset_trick_points() {
+	trick_points = NULL;
+}
+
+
+
 
 /*
-short Player::other_player_asked(short *game_type, short &contra_counter2)
-{
-	string answer;
-	short decision = NULL;
-	do
-	{
-		
-		show(8, NULL);
-		cout << name << " - Co mowisz Ty?\n1. Graj.\n";
-		if (contra_counter2 == 0) cout << "2. Kontra!";
-		else if (contra_counter2 == 1)
-		{
-			cout << "2. Rekontra!";
-			answer = "Rekontra!";
-		}
-		else if (contra_counter2 == 2)
-		{
-			cout << "2. Slupa!";
-			answer = "Slupa!";
-		}
-		else if (contra_counter2 == 3)
-		{
-			cout << "2. Mord!";
-			answer = "Mord!";
-		}
-		else if (contra_counter2 == 4)
-		{
-			cout << "2. Supermord!";
-			answer = "Supermord!";
-		}
-		else cout << "Blad";
-		if(*game_type != 8) cout << "\n3. Durha!";
-		if(*game_type != 7 && *game_type != 8) cout << "\n4. Mizerka!";
-
-		cout << "\n\nTwoj wybor : ";
-		
-		cin >> decision;
-		if (*game_type == 8 && (decision == 3 || decision == 4)) decision = 5;
-		else if (*game_type == 7 && decision == 4) decision = 5;
-
-		system("CLS");
-		switch (decision)
-
-		{
-		case 1:
-
-			cout << name << "Gramy";
-			Sleep(1000);
-			system("CLS");
-			return 1;
-			break;
-
-		case 2:
-			contra();
-			system("CLS");
-			cout << answer << endl << endl;
-			system("pause");
-			system("CLS");
-			return 2;
-			break;
-		case 3:
-			system("CLS");
-			cout << "DURH!\n\n";
-			contra_reset();
-			system("pause");
-			system("CLS");
-			*game_type = 8;
-			return 8;
-
-		case 4:
-
-			system("CLS");
-			cout << "MIZERKA!\n\n";
-			contra_reset();
-			system("pause");
-			system("CLS");
-			*game_type = 7;
-
-			return 7;
-			break;
-
-		default:
-			cout << "Wybierz opcje z podanego zakresu. Jeszcze raz!";
-			Sleep(1000);
-			system("CLS");
-			break;
-		}
-	} while (decision != 1 && decision != 2 && decision != 3 && decision != 4);
-}
 
 Card Player::compare_two(Card& first_comp, Card& second_comp)
 {

@@ -7,19 +7,52 @@
 using namespace std;
 
 
-void Run::set_game_type(short number) { game_type = number; }
-short* Run::get_game_type_pointer() { return &game_type; }
-short Run::get_game_type() { return game_type; }
-//Player[] Run::get_players() { return players; }
 
 
 
+Run::Run()
+	:
+
+	deck_pattern{ Card(0), Card(1), Card(2), Card(3), Card(4), Card(5), Card(6), Card(7), Card(8), Card(9), Card(10), Card(11), Card(12), Card(13), Card(14), Card(15),
+	Card(16), Card(17), Card(18), Card(19), Card(20), Card(21), Card(22), Card(23) }
+{
+	for (short i = 0; i < 24; i++) {
+		deck_pointers[i] = &(deck_pattern[i]);
+	}
+	game_type = 0;
+	first_player_this_round = 0;
+
+};
 
 
 
+void Run::run_general() {
+	select_language();
+	start();
+	meet_players();
+	bool play = false;
+	Auction auction(players, &game_type, first_player_this_round);
 
-//***************************************************************************************************************************************************************************
-// USES FUNION ABOVE AND ASKS IF USER WANT TO PLAY
+	string result_of_the_first_auction;
+	do {
+		first_player_this_round++;
+		auction.reset_private_variables();
+		shuffle_cards();
+		give_cards_to_players();
+
+		result_of_the_first_auction = auction.first_auction_player_see_four_cards(first_player_this_round);
+
+
+		if (result_of_the_first_auction == "COLOUR")
+			play = auction.player_see_eight_cards_decision_play_or_resign();
+
+		//else if (result_of_the_first_auction == "WARSOW") {
+			//run_game_warsow();
+		//}
+	} while (play == false);
+
+	auction.players_see_eight_cards_decision_contra_misery_durh();
+}
 
 
 void Run::select_language() {
@@ -68,9 +101,15 @@ void Run::start()
 
 }
 
+void Run::meet_players()
+{
+	for (short i = 0; i < 3; i++) {
+		players[i].name_player(i + 2 );
+	}
+	who_plays();
+	system("CLS");
+}
 
-//***************************************************************************************************************************************************************************
-//CREATING PLAYERS (OBJECTS), ASKS THEM TO GIVE THEIR NAMES AND TO CONFIRM THAT THEY WERE PROPERLY ENTERED - SHOWS THEM ON THE SCREEN
 void Run::who_plays()
 {
 	system("CLS");
@@ -81,24 +120,6 @@ void Run::who_plays()
 	Text::read_text(Text::start_menu, 8, 1);
 	system("pause");
 }
-extern string meet_1, meet_2, meet_3;
-
-void Run::meet_players()
-{
-	for (short i = 0; i < 3; i++) {
-		Text::read_text(Text::start_menu, i + 2, 1);
-		players[i].name_player(i + 1);
-	}
-	who_plays();
-	system("CLS");
-}
-
-//***************************************************************************************************************************************************************************
-// PUTS DATA TO THE EMPTY CARD OBJECTS
-
-
-//***************************************************************************************************************************************************************************
-//SHUFFLE EXISTING CARD IN THE 24 CARDS DECK.
 
 void Run::shuffle_cards()
 {
@@ -128,23 +149,9 @@ void Run::give_cards_to_players()
 	
 }
 
+
+
 /*
-//***************************************************************************************************************************************************************************
-void Run::check_if(short &what, short who, short count)
-{
-	if (what == 7 || what == 8)
-	{
-		which_player = who;
-		what = 3; 
-	}
-
-	if (count == 5)
-		what = 1;
-
-}
-
-
-
 void Run::run_game(short game_to_run)
 {
 	if (game_to_run == 5 || game_to_run == 6)
@@ -206,52 +213,10 @@ void Run::run_game(short game_to_run)
 		}
 
 	}
-}
-
-*/
-void Run::copy_deck_pointers() {
-	for (short i = 0; i < 24; i++) {
-		deck_pointers[i] = &(deck_pattern[i]);
-	}
-}
-
-
-Run::Run()
-	: 
 	
-	deck_pattern{ Card(0), Card(1), Card(2), Card(3), Card(4), Card(5), Card(6), Card(7), Card(8), Card(9), Card(10), Card(11), Card(12), Card(13), Card(14), Card(15),
-	Card(16), Card(17), Card(18), Card(19), Card(20), Card(21), Card(22), Card(23) }
-{
-	copy_deck_pointers();
-	game_type = 0;
-	which_player = 0;
-	first_player_this_round = 0;
-};
+}*/
 
 
-void Run::run_general() {
-	select_language();
-	start();
-	meet_players();
-	bool play = false;
-	Auction auction(players);
 
-	string result_of_the_first_auction;
-	do {
-		first_player_this_round++;
-		auction.reset_private_variables();
-		shuffle_cards();
-		give_cards_to_players();
-		
-		result_of_the_first_auction = auction.first_auction_player_see_four_cards(first_player_this_round);
-		
-		
-		if( result_of_the_first_auction == "COLOUR")
-		play = auction.player_see_eight_cards_decision_play_or_resign();
 
-		//else if (result_of_the_first_auction == "WARSOW") {
-			//run_game_warsow();
-		//}
-	} while (play == false);
-	auction.players_see_eight_cards_decision_contra_misery_durh();
-}
+

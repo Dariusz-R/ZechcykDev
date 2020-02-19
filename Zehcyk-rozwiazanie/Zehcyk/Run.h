@@ -19,38 +19,24 @@ using namespace std ;
 
 class Run
 {   
-    private:
-        short game_type;
-        short which_player;
-    Player players[3];
-    short first_player_this_round;
-    public:
-    const Card  deck_pattern[24];
-    const Card* deck_pointers[24];
+//PRIVATE DATA MEMBERS
+    Card const  deck_pattern[24];               //  DECK OF CONSTANT CARDS
+    Card const* deck_pointers[24];              //  24 pointers to constant cards from deck_pattern - they are copied by other classes to read constant cards
+	short game_type;                            //  Number specyfing which type of game will be played
+	Player players[3];                          //  Players who will play the game
+	short first_player_this_round;              //  Number specyfing which player will start the game - he will be the first who will have oportunity to made any decision
 
-    //static vector <Card> deck_temp;
-   
+
+// METHODS********************************************************************************************************************************
+public:
     Run();
-    void run_general();
-    void set_game_type(short);
-    short* get_game_type_pointer();
-    short  get_game_type();
-    void copy_deck_pointers();
-    //Player[] get_players();
-    
-
-    void who_plays();
-    void select_language();
-    void start() ;
-    void meet_players() ;
+    void run_general();                         //  Function responsible for managing the overall program funcionality
+private:
+    void select_language();                     
+    void start();
+    void meet_players();
+    void who_plays();                           
     void shuffle_cards() ;
     void give_cards_to_players() ;
-
-        
-        //void run_game(short);
-        //void check_if(short&, short, short);
-
-
-
-
+    //void run_game()
 };

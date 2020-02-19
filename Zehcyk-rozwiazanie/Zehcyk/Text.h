@@ -23,7 +23,7 @@ class Text
 		static short cin_check(short&, short, bool = false);
 		static void load_language_version();
 		static void read_text(vector<string>, short, short);
-		static void load_language_file( vector <string> &, string = "" );
+		static void load_language_file( vector <string> &, string = "", char = '#');
 };
 #endif
 
