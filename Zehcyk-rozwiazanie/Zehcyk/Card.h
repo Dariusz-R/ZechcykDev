@@ -11,7 +11,7 @@ class Card
     static char colour_pattern[4];
     public:
     char symbol[5];
-    short   value, sort_value, colour ;
+    short colour ;
 
 public:
     Card(short);

@@ -5,11 +5,14 @@ using namespace std ;
 
 class Game
 {
+	Card thrown[3];
+	Player players[3];
+	short players_points[3] = { NULL };
+
 
 
 public:
-    short who_win_trick(Card, Card, Card) ;
-    void throw_cards () ;
+    Game_
 
 
 };

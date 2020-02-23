@@ -3,21 +3,24 @@
 #include "Text.h"
 #include <stdlib.h>
 #include <iomanip>
+#include <vector>
 
 
 using namespace std;
 
-short Auction::player_with_initiative;
+short* Auction::game_type_auct;
+vector <string> Auction::auction_log = {};
 
 
-
-Auction::Auction(Player* players_adress, short* game_type_in_Run_class, short initiative)
+Auction::Auction(Player* players_adress, short* game_type_in_Run_class, short &player_who_has_started_the_auction)
+	:SIX_OPTIONS_TO_CHOSE(6), FIVE_OPTIONS_TO_CHOSE(5), PLAYER_WHO_HAS_STARTED_THE_AUCTION(player_who_has_started_the_auction),
+	NUMBER_OF_PLAYERS(3), HEARTS(1), TILES(2), PIKES(3), CLOVERS(4), ALL_CARDS_IN_HAND(8), FIRST_FOUR(4), ALL_CARDS_FOR_MISERY(9), WARSOW(5), DOUBLE_THE_STAKE(6)
 {
 	auction_counter = 0;
 	agree_to_play_on_current_terms = 0;
-	player_with_initiative = initiative;
-	auction_log.clear();
+	player_with_initiative = PLAYER_WHO_HAS_STARTED_THE_AUCTION;
 	log_counter = 0;
+	player_choice = 0;
 	game_type_auct = game_type_in_Run_class;
 
 	players_auct[0] = &players_adress[0];
@@ -25,7 +28,9 @@ Auction::Auction(Player* players_adress, short* game_type_in_Run_class, short in
 	players_auct[2] = &players_adress[2];
 }
 
-
+short Auction::get_player_with_initiative() {
+	return player_with_initiative;
+}
 
 void Auction::reset_private_variables() {
 	auction_counter = 0;
@@ -34,71 +39,82 @@ void Auction::reset_private_variables() {
 	log_counter = 0;
 }
 
+short Auction::show_first_auction_menu(short which_player) {
+	if (which_player != PLAYER_WHO_HAS_STARTED_THE_AUCTION) {
+		Text::read_text(Text::log_frames, 0, 1);
+		read_auction_log();
+	}
+	players_auct[which_player]->show(4, "AUCTION");
+	switch (auction_counter) {
+	case 0:
+		Text::read_text(Text::A_4, 6, 2);
+		Text::read_text(Text::A_4, 10, 1);
+		return FIVE_OPTIONS_TO_CHOSE;
+		break;
+	case 1:
+		Text::read_text(Text::A_4, 6, 1);
+		Text::read_text(Text::A_4, 8, 1);
+		Text::read_text(Text::A_4, 10, 1);
+		return SIX_OPTIONS_TO_CHOSE;
+		break;
+	case 2:
+		Text::read_text(Text::A_4, 6, 1);
+		Text::read_text(Text::A_4, 9, 2);
+		return SIX_OPTIONS_TO_CHOSE;
+		break;
+	default:
+		cout << "BLAD. WARSZAWA MA ZA DUZY LICZNIK KONTR" << endl;
+	}
+}
+
+void Auction::player_picked_colour(short which_player) {
+	history_actualization(which_player, 5 + player_choice);
+	player_with_initiative = which_player;
+	auction_counter = 0;
+	*game_type_auct = player_choice;
+}
 
 
-string Auction::first_auction_player_see_four_cards(short first_player_this_round_function)
+string Auction::first_auction_player_see_four_cards()
 {
-	short choice = 0, how_many_options = 0;
+	short how_many_options_to_chose = 0;
 	log_counter = 0;
 	auction_counter = 0;
-	player_with_initiative = first_player_this_round_function;
+	player_choice = 0;
+	sort_players_cards(FIRST_FOUR);
+	
 
-	for (short i = 0; i < 3; i++) {
+	for (short i = 0; i < NUMBER_OF_PLAYERS; i++) {
 		do {
-
-
-			players_auct[player_after_player_with_initiative(i)]->sort_cards("FOUR_CARDS");
-			if (i > 0) {
-				Text::read_text(Text::log_frame, 0, 1);
-				read_auction_log();
-			}
-			players_auct[i]->show(4, "AUCTION");
-			switch (auction_counter) {
-			case 0:
-				Text::read_text(Text::A_4, 6, 2);
-				Text::read_text(Text::A_4, 10, 1);
-				how_many_options = 5;
-				break;
-			case 1:
-				Text::read_text(Text::A_4, 6, 1);
-				Text::read_text(Text::A_4, 8, 1);
-				Text::read_text(Text::A_4, 10, 1);
-				how_many_options = 6;
-				break;
-			case 2:
-				Text::read_text(Text::A_4, 6, 1);
-				Text::read_text(Text::A_4, 9, 2);
-				how_many_options = 6;
-				break;
-			default:
-				cout << "BLAD. WARSZAWA MA ZA DUZY LICZNIK KONTR" << endl;
-			}
-			cin >> choice;
-			Text::cin_check(choice, how_many_options);
+			how_many_options_to_chose = show_first_auction_menu(i);
+			cin >> player_choice;
+			Text::cin_check(player_choice, how_many_options_to_chose);
 			system("CLS");
-		} while (choice == NULL);
-		if (choice > 0 && choice < 5) {
-			history_actualization(i, 5 + choice);
-			player_with_initiative = i;
-			auction_counter = 0;
-			*game_type_auct = choice;
+		} while (player_choice == 0);
+
+
+		if (player_choice == HEARTS || player_choice == TILES || player_choice == PIKES || player_choice == CLOVERS) {
+			player_picked_colour(i);
+			sort_players_cards(ALL_CARDS_IN_HAND);
 			return "COLOUR";
-		}
-		else if (choice == 5) {
+		} else if (player_choice == WARSOW) {
 			history_actualization(i, auction_counter);
 			if (auction_counter == 0) 
 				contra(i);
-		}
-		else if (choice == 6) {
+		} else if (player_choice == 6) {
 			history_actualization(i, 3 + auction_counter);
 			contra(i);
 		}
 	}
-	*game_type_auct = choice;
+	sort_players_cards(ALL_CARDS_IN_HAND);
+	*game_type_auct = player_choice;
 	return "WARSOW";
 }
 
-
+void Auction::sort_players_cards(short how_many_cards_to_sort) {
+	for (short i = 0; i < NUMBER_OF_PLAYERS; i++)
+		players_auct[i]->sort_cards(how_many_cards_to_sort);
+}
 
 					short Auction::player_after_player_with_initiative(short which_after) {
 						return ((player_with_initiative + which_after) % 3);
@@ -119,17 +135,29 @@ string Auction::first_auction_player_see_four_cards(short first_player_this_roun
 
 
 
-					void Auction::read_auction_log() {
-						cout << endl;
-						for (short i = 0; i < auction_log.size(); i++) {
-							cout << setw(10) << "* " << setw(55);
-							short size_of_the_log = auction_log[i].size();
-							for (short j = 0; j < 53 - size_of_the_log; j++) {
-								auction_log[i].append(" ");
+					void Auction::read_auction_log(bool all) {
+
+						if (all == true) {
+							for (short i = 0; i < auction_log.size(); i++) {
+								cout << setw(10) << "* " << setw(55);
+								short size_of_the_log = auction_log[i].size();
+								for (short j = 0; j < 53 - size_of_the_log; j++) {
+									auction_log[i].append(" ");
+								}
+								if (i == auction_log.size() - 1)
+									auction_log[auction_log.size() - 1].append("*");
+								cout << auction_log[i] << endl;
 							}
-							if (i == auction_log.size() - 1)
-								auction_log[auction_log.size() - 1].append("*");
-							cout << auction_log[i] << endl;
+						}
+						else {
+							cout << setw(10) << "* " << setw(55);
+							short size_of_the_log = auction_log.back().size();
+							for (short j = 0; j < 53 - size_of_the_log; j++) {
+								auction_log.back().append(" ");
+							}
+							if( auction_log.back().back() != '*' )
+								auction_log.back().append("*");
+							cout << auction_log.back() << endl;
 						}
 					}
 
@@ -137,17 +165,12 @@ string Auction::first_auction_player_see_four_cards(short first_player_this_roun
 
 bool Auction::player_see_eight_cards_decision_play_or_resign()
 {
-	short decision = NULL;
-
-	for (short i = 0; i < 3; i++) {
-		players_auct[i]->sort_cards("EIGHT_CARDS");
-	}
-
+	short decision = 0;
 
 	do
 	{
 		system("CLS");
-		Text::read_text(Text::log_frame, 0, 1);
+		Text::read_text(Text::log_frames, 0, 1);
 		read_auction_log();
 		players_auct[player_with_initiative]->show(8, "AUCTION");
 		Text::read_text(Text::A_8, 0, 1);
@@ -179,9 +202,6 @@ void Auction::players_see_eight_cards_decision_contra_misery_durh()
 {
 	short did_agreement_was_made = false;
 
-	for (short j = 0; j < 3; j++) {
-		players_auct[j]->sort_cards("EIGHT_CARDS");
-	}
 	short i = 1;
 	do {
 
@@ -228,9 +248,6 @@ void Auction::players_see_eight_cards_decision_contra_misery_durh()
 
 
 
-short Auction::get_player_with_initiative() { 
-	return player_with_initiative;
-}
 
 
 
@@ -257,7 +274,7 @@ short Auction::subfunction(short who) {
 
 	do {
 		system("CLS");
-		Text::read_text(Text::log_frame, 0, 1);
+		Text::read_text(Text::log_frames, 0, 1);
 		read_auction_log();
 		players_auct[who]->show(8, "AUCTION");
 		Text::read_text(Text::A_8, 2, 2);

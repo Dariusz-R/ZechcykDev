@@ -20,7 +20,7 @@
 		      #
 		         Gra jest trzyosobowa.
 			   Przedstw graczy
-	    [Nazwa gracza moze miec maksymalnie 35 znakow]
+	    [Nazwa gracza moze miec maksymalnie 14 znakow]
 
 		   Gracz numer jeden: 
 		 	 #

@@ -1,6 +1,7 @@
 #include "Text.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 
 using namespace std;
@@ -8,8 +9,10 @@ vector <string> Text::pl_OR_eng;
 vector <string> Text::start_menu;
 vector <string> Text::A_4;
 vector <string> Text::A_8;
-vector <string> Text::log_frame;
+vector <string> Text::Warsow_txt;
+vector <string> Text::log_frames;
 vector <string> Text::log_message;
+vector <string> Text::game_log_message;
 string Text::language_version;
 
 void Text::set_language_version(string lang) { 
@@ -32,8 +35,8 @@ void Text::read_text(vector <string> what, short begin, short end) {
 
 short Text::cin_check(short& cin_value , short range, bool first_menu)
 {
-	while (1)
-	{
+
+	
 		if (cin.fail() || cin_value > range || cin_value < 1)
 		{
 			cin.clear();
@@ -60,8 +63,44 @@ short Text::cin_check(short& cin_value , short range, bool first_menu)
 			return cin_value = 0;
 		}
 		else return cin_value;
-	}
+	
 }
+void Text::cin_check(short& cin_value, short range, vector <short> allowed_values)
+{
+	bool correct_value = true;
+	
+	if (cin.fail() || cin_value > range - 1 || cin_value < 0)
+	{
+		cin.clear();
+		cin.ignore(100, '\n'); ///// !!!!!!!!!!!!!!!!!!!!!!1
+		correct_value = false;
+	} else if (!allowed_values.empty()) {
+		correct_value = false;
+		for (short i = 0; i < allowed_values.size(); i++)
+			if (cin_value == allowed_values[i])
+				correct_value = true;
+	}
+	if (correct_value == false) {
+		if (language_version == "Polish") {
+			read_text(pl_OR_eng, 1, 1);
+		}
+		else if (language_version == "English") {
+			read_text(pl_OR_eng, 2, 1);
+			
+		}
+		cout << endl << endl << "                 ";
+		system("pause");
+		cin_value = -1;
+
+
+	}
+
+	
+
+}
+
+
+
 
 
 void Text::load_language_file( vector <string> &vector_name, string file_name , char delim) {
@@ -103,10 +142,12 @@ void Text::load_language_version()
 	if (language_version == "") load_language_file(pl_OR_eng);
 	else {
 		load_language_file(start_menu, "start_menu_pl.txt");
-		load_language_file(log_frame, "auction_log_frame_pl.txt");
+		load_language_file(log_frames, "log_frames_pl.txt");
 		load_language_file(log_message, "auction_log_message_pl.txt", '\n');
 		load_language_file(A_4, "auction_four_cards_pl.txt");
 		load_language_file(A_8, "auction_eight_cards_pl.txt");
+		load_language_file(Warsow_txt, "game_warsow_pl.txt");
+		load_language_file(game_log_message, "game_log_message_pl.txt", '\n');
 	}
 }
 

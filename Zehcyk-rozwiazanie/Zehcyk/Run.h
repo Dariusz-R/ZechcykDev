@@ -24,11 +24,16 @@ class Run
     Card const* deck_pointers[24];              //  24 pointers to constant cards from deck_pattern - they are copied by other classes to read constant cards
 	short game_type;                            //  Number specyfing which type of game will be played
 	Player players[3];                          //  Players who will play the game
-	short first_player_this_round;              //  Number specyfing which player will start the game - he will be the first who will have oportunity to made any decision
-
+	short player_who_begins_the_auction;        //  Number specyfing which player will start the auction - he will be the first who will have oportunity to made any decision
+                                                //  Number specyfing which player will throw his card as a first and who will play against other two other players
+                                                    // If players are playing warsow - it will be id of the person who as a last increased the stake
 
 // METHODS********************************************************************************************************************************
 public:
+    
+
+
+
     Run();
     void run_general();                         //  Function responsible for managing the overall program funcionality
 private:

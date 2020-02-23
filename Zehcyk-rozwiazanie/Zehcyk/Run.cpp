@@ -12,15 +12,15 @@ using namespace std;
 
 Run::Run()
 	:
-
 	deck_pattern{ Card(0), Card(1), Card(2), Card(3), Card(4), Card(5), Card(6), Card(7), Card(8), Card(9), Card(10), Card(11), Card(12), Card(13), Card(14), Card(15),
 	Card(16), Card(17), Card(18), Card(19), Card(20), Card(21), Card(22), Card(23) }
+	
 {
 	for (short i = 0; i < 24; i++) {
 		deck_pointers[i] = &(deck_pattern[i]);
 	}
 	game_type = 0;
-	first_player_this_round = 0;
+	player_who_begins_the_auction = 0;
 
 };
 
@@ -31,24 +31,25 @@ void Run::run_general() {
 	start();
 	meet_players();
 	bool play = false;
-	Auction auction(players, &game_type, first_player_this_round);
+	Auction auction(players, &game_type, player_who_begins_the_auction);
 
 	string result_of_the_first_auction;
 	do {
-		first_player_this_round++;
+		player_who_begins_the_auction++;
 		auction.reset_private_variables();
 		shuffle_cards();
 		give_cards_to_players();
 
-		result_of_the_first_auction = auction.first_auction_player_see_four_cards(first_player_this_round);
+		result_of_the_first_auction = auction.first_auction_player_see_four_cards();
 
 
 		if (result_of_the_first_auction == "COLOUR")
 			play = auction.player_see_eight_cards_decision_play_or_resign();
 
-		//else if (result_of_the_first_auction == "WARSOW") {
-			//run_game_warsow();
-		//}
+		else if (result_of_the_first_auction == "WARSOW") {
+			Game_Warsow game(players, auction.get_player_with_initiative()) ;
+			game.play_warsow(auction.get_auction_counter());
+		}
 	} while (play == false);
 
 	auction.players_see_eight_cards_decision_contra_misery_durh();
