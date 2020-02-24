@@ -7,6 +7,8 @@
 #include "Text.h"
 #include "Game_Warsow.h"
 #include "Game_Colour.h"
+#include "Game_Misery.h"
+#include "Game_Durh.h"
 #include "Auction.h"
 #include <vector>
 

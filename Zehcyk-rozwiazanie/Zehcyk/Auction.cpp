@@ -240,9 +240,6 @@ void Auction::players_see_eight_cards_decision_contra_misery_durh()
 			break;
 		}
 	} while (auction_counter < 6 && did_agreement_was_made == false);
-
-	cout << "INFORMACJA W CO GRAMY i ilosc kontr." << endl;
-	system("pause");
 }
 
 

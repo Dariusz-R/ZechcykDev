@@ -47,12 +47,24 @@ void Run::run_general() {
 			play = auction.player_see_eight_cards_decision_play_or_resign();
 
 		else if (result_of_the_first_auction == "WARSOW") {
-			Game_Warsow game(players, auction.get_player_with_initiative()) ;
-			game.play_warsow(auction.get_auction_counter());
+			Game_Warsow game_warsow(players, auction.get_player_with_initiative());
+			game_warsow.play_warsow(auction.get_auction_counter());
 		}
 	} while (play == false);
-
 	auction.players_see_eight_cards_decision_contra_misery_durh();
+	if (game_type > 0 && game_type < 5)
+	{
+		Game_Colour game_colour(players, auction.get_player_with_initiative(), game_type);
+		game_colour.play_colour(auction.get_auction_counter());
+	} else if (game_type == 7) {
+
+		Game_Durh game_durh(players, auction.get_player_with_initiative());
+		game_durh.play_durh(auction.get_auction_counter());
+	} else if (game_type == 8) {
+
+		Game_Misery game_misery(players, auction.get_player_with_initiative());
+		game_misery.play_misery(auction.get_auction_counter());
+	}
 }
 
 

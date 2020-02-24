@@ -13,7 +13,7 @@ class Player
     string name;
     short  trick_points, game_points ;
     vector <const Card*> player_cards;
-    short last_thrown_card;
+    short last_thrown_card_iterator;
     short const SORT_LIKE_FOR_MISERY;
 
     //PUBLIC METHODS ORDERED BY THE SEQUENCE OF THE APPLICATION
@@ -36,6 +36,8 @@ public:
     void reset_trick_points();
 
     vector<short> how_many_card_in_colour_i_have(short);
+    bool do_I_have_queen_and_king_in_one_colour();
+    bool do_I_want_to_meld();
         
     Card const * share_card(short);
     //int choice_game_type(short&) ;

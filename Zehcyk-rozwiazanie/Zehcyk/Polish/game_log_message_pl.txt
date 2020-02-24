@@ -1,6 +1,6 @@
 Sztych wygral gracz 
  zdobywajac 
- pkt.
+ pkt
 Gracz
 zameldowal za 40pkt!
 zameldowal za 20pkt!

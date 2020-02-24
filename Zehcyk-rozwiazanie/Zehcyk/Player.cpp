@@ -18,6 +18,7 @@ Player::Player()
 	string name = "";
 	trick_points = 0; 
 	game_points = 0;
+	last_thrown_card_iterator = 8;
 }
 
 
@@ -225,6 +226,32 @@ vector <short> Player::how_many_card_in_colour_i_have(short colour) {
 
 
 
+ bool Player::do_I_have_queen_and_king_in_one_colour() {
+	 if (player_cards[last_thrown_card_iterator]->symbol[2] == 'D' && (last_thrown_card_iterator + 1) < player_cards.size()) {
+		 if (player_cards[last_thrown_card_iterator + 1]->symbol[2] == 'K' && player_cards[last_thrown_card_iterator]->colour == player_cards[last_thrown_card_iterator + 1]->colour)
+			 return true;
+	 }
+	 else if (player_cards[last_thrown_card_iterator]->symbol[2] == 'K' && (last_thrown_card_iterator - 1) > 0) {
+		 if (player_cards[last_thrown_card_iterator - 1]->symbol[2] == 'D' && player_cards[last_thrown_card_iterator]->colour == player_cards[last_thrown_card_iterator - 1]->colour)
+			 return true;
+	 }
+	 return false;
+ }
+
+ bool Player::do_I_want_to_meld() {
+
+	 system("CLS");
+	 short yes_or_no = 3;
+	 cout << " CHcesz zameldowac?" << endl;
+	 cin >> yes_or_no;
+	 Text::cin_check(yes_or_no, 2);
+
+	 if (yes_or_no == 2)
+		 return false;
+	 if (yes_or_no == 1)
+		 return true;
+ }
+
 Card const * Player::which_card_I_throw(vector<short> what_may_I_throw)
 {
 	if (player_cards.size() != 1)
@@ -232,7 +259,7 @@ Card const * Player::which_card_I_throw(vector<short> what_may_I_throw)
 		
 		do
 		{
-			last_thrown_card = 0;
+			last_thrown_card_iterator = 0;
 			Text::read_text(Text::log_frames, 0, 1);
 			Auction::read_auction_log(false);
 			Text::read_text(Text::log_frames, 1, 1);
@@ -240,12 +267,12 @@ Card const * Player::which_card_I_throw(vector<short> what_may_I_throw)
 			show(player_cards.size(), "GAME");
 			show_me_what_I_can_throw(what_may_I_throw);
 			Text::read_text(Text::Warsow_txt, 0, 1);
-			cin >> last_thrown_card;
-			last_thrown_card--;
-			Text::cin_check(last_thrown_card, player_cards.size(), what_may_I_throw);
+			cin >> last_thrown_card_iterator;
+			last_thrown_card_iterator--;
+			Text::cin_check(last_thrown_card_iterator, player_cards.size(), what_may_I_throw);
 			system("CLS");
-		} while (last_thrown_card == -1);
-		return player_cards[last_thrown_card];
+		} while (last_thrown_card_iterator == -1);
+		return player_cards[last_thrown_card_iterator];
 	}
 	else
 	{
@@ -298,5 +325,5 @@ void Player::show_me_what_I_can_throw(vector<short> what_may_I_throw)
 
 void Player::erase_thrown_card()
 {
-	player_cards.erase(player_cards.begin() + last_thrown_card);
+	player_cards.erase(player_cards.begin() + last_thrown_card_iterator);
 }
