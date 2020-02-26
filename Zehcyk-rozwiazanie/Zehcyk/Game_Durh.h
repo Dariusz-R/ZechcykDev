@@ -12,15 +12,14 @@ class Game_Durh : public Game {
 	enum {
 		 BASE_STAKE_FOR_DURH = 8
 	};
-	short const player_who_chose_durh;
-	short was_durh_successful;
-	
-	short play_trick();
 
 public:
-	Game_Durh(Player*, short);
-	void play_durh(short game_points_multiplier);
-	void game_log_actualization(short, short = 1);
+	short const player_who_chose_durh;
+	short& was_durh_successful;
+	Game_Durh(Player*);
+	void show_info_about_game();
+	void game_log_update(short, short = 1);
+	bool checking_the_condition_which_depends_from_gametype(short);
 
 	
 	

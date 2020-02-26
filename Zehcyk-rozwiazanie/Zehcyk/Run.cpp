@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <vector>
 
-using namespace std;
+
 
 
 
@@ -24,8 +24,6 @@ Run::Run()
 
 };
 
-
-
 void Run::run_general() {
 	select_language();
 	start();
@@ -33,7 +31,7 @@ void Run::run_general() {
 	bool play = false;
 	Auction auction(players, &game_type, player_who_begins_the_auction);
 
-	string result_of_the_first_auction;
+	std::string result_of_the_first_auction;
 	do {
 		player_who_begins_the_auction++;
 		auction.reset_private_variables();
@@ -42,31 +40,31 @@ void Run::run_general() {
 
 		result_of_the_first_auction = auction.first_auction_player_see_four_cards();
 
-
 		if (result_of_the_first_auction == "COLOUR")
 			play = auction.player_see_eight_cards_decision_play_or_resign();
-
 		else if (result_of_the_first_auction == "WARSOW") {
-			Game_Warsow game_warsow(players, auction.get_player_with_initiative());
-			game_warsow.play_warsow(auction.get_auction_counter());
+			Game::set_important_player(auction.get_player_with_initiative());
+			Game::set_game_points_multiplier(auction.get_auction_counter());
+			Game_Warsow game_warsow(players);
+			game_warsow.play_game();
 		}
+
 	} while (play == false);
+
 	auction.players_see_eight_cards_decision_contra_misery_durh();
-	if (game_type > 0 && game_type < 5)
-	{
-		Game_Colour game_colour(players, auction.get_player_with_initiative(), game_type);
-		game_colour.play_colour(auction.get_auction_counter());
+	Game::set_important_player(auction.get_player_with_initiative());
+	Game::set_game_points_multiplier(auction.get_auction_counter());
+	if (game_type > 0 && game_type < 5){
+		Game_Colour game_colour(players, game_type);
+		game_colour.play_game();
 	} else if (game_type == 7) {
-
-		Game_Durh game_durh(players, auction.get_player_with_initiative());
-		game_durh.play_durh(auction.get_auction_counter());
+		Game_Durh game_durh(players);
+		game_durh.play_game();
 	} else if (game_type == 8) {
-
-		Game_Misery game_misery(players, auction.get_player_with_initiative());
-		game_misery.play_misery(auction.get_auction_counter());
+		Game_Misery game_misery(players);
+		game_misery.play_game();
 	}
 }
-
 
 void Run::select_language() {
 	short language_pack;
@@ -96,7 +94,7 @@ void Run::start()
 	do
 	{
 		Text::read_text(Text::start_menu,0,1);
-		cin >> want_to_play;
+		std::cin >> want_to_play;
 		loop_choice = false;
 		Text::cin_check(want_to_play, 3);
 		if (want_to_play == 1) { 
@@ -119,16 +117,16 @@ void Run::meet_players()
 	for (short i = 0; i < 3; i++) {
 		players[i].name_player(i + 2 );
 	}
-	who_plays();
+	players_introduction();
 	system("CLS");
 }
 
-void Run::who_plays()
+void Run::players_introduction()
 {
 	system("CLS");
 	for (short i = 0; i < 3; i++) {
 		Text::read_text(Text::start_menu, 5 + i, 1);
-		cout << players[i].get_name();
+		std::cout << players[i].get_name();
 	}
 	Text::read_text(Text::start_menu, 8, 1);
 	system("pause");
@@ -146,10 +144,6 @@ void Run::shuffle_cards()
 
 }
 
-
-//***************************************************************************************************************************************************************************
-// GIVES 8 SHUFFLED BEFORE CARDS TO EACH PLAYER.
-
 void Run::give_cards_to_players()
 {
 	for (short h = 0 ; h < 2 ; h++)
@@ -162,72 +156,6 @@ void Run::give_cards_to_players()
 	
 }
 
-
-
-/*
-void Run::run_game(short game_to_run)
-{
-	if (game_to_run == 5 || game_to_run == 6)
-	{
-		short choice = NULL, who_lose = NULL;
-		Game_Warsow playing_warsow;
-		playing_warsow.share_players(players);
-		short initiative = 0;
-		for (int i = 0; i < 8; i++)
-			initiative = playing_warsow.take_and_compare(initiative);
-		who_lose = playing_warsow.who_won();
-		cout << "Przegral gracz " << players[who_lose].get_name() << " uzyskujac " << playing_warsow.players_points[who_lose] << "pkt.\n";
-		switch (warsow)
-		{
-		case 1:
-			cout << "Graliscie w Warszawe. Przegrana za 1 pkt!\n\n";
-			break;
-
-		case 2:
-			cout << "Graliscie w kontre-warszawe. Przegrana za 2 pkt!\n\n";
-			break;
-
-		case 3:
-			cout << "Graliscie w rekontre-warszawe. Przegrana za 4 pkt!\n\n";
-			break;
-
-		default:
-			cout << "Blad w 4 switchu w run.cpp" << endl << endl;
-			break;
-
-		}
-
-
-	}
-	else if (game_to_run == 1 || game_to_run == 2 || game_to_run == 3 || game_to_run == 4)
-	{
-		short choice = NULL, who_lose = NULL;
-		extern short contra_counter;
-		Game_Colour playing_colour;
-		playing_colour.share_players(players);
-		playing_colour.set_trumph(game_to_run);
-		playing_colour.get_trumph();
-		short initiative = 0;
-		for (int i = 0; i < 8; i++)
-			initiative = playing_colour.take_and_compare(initiative);
-		who_lose = playing_colour.who_won();
-		cout << "Przegral gracz " << players[who_lose].get_name() << " uzyskujac " << playing_colour.players_points[who_lose] << "pkt.\n";
-		if (contra_counter == 1)
-		{
-			cout << "Gracz " << players[who_lose].get_name() << " przegral za 1 punkt meczowy";
-		}
-		else if (warsow == 2)
-		{
-			cout << "Gracz " << players[who_lose].get_name() << " przegral za 2 punkty meczowe";
-		}
-		else if (warsow == 3)
-		{
-			cout << "Gracz " << players[who_lose].get_name() << " przegral za 4 punkty meczowe";
-		}
-
-	}
-	
-}*/
 
 
 

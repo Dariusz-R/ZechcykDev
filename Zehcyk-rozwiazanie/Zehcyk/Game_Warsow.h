@@ -6,20 +6,22 @@
 //#include "Card.h"
 
 
-using namespace std ;
+
 
 class Game_Warsow :public Game
 {
 public:
-	Game_Warsow(Player*, short);
-	void play_warsow(short);
-	
-	
-	
-	short play_trick();
-	void game_log_actualization(short, short = 1);
+	Game_Warsow(Player*);
+	short const & player_who_begins_the_game;
+	short & player_who_lost_warsow;
+
+	void sum_up_and_give_trick_points_to_player_who_won_trick();
+	bool checking_the_condition_which_depends_from_gametype(short);
+	void game_log_update(short, short = 1);
 	short who_has_the_most_points();
 	short sum_of_points_from_current_trick;
+	void show_info_about_game();
+	void distribute_game_points();
 };
 
 #endif

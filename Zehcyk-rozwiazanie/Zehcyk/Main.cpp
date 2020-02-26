@@ -5,7 +5,7 @@
 #include <ctime>  
 #include <cstdio>
 
-using namespace std;
+
 short contra_counter = NULL;
 
 int main()

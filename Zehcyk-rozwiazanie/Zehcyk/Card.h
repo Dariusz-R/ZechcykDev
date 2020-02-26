@@ -2,7 +2,7 @@
 #define CARD
 #include <iostream>
 
-using namespace std;
+
 
 class Card
 {

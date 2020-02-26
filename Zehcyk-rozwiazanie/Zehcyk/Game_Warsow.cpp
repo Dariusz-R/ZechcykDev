@@ -4,80 +4,50 @@
 
 
 
-using namespace std ;
 
 vector <string> Game_Warsow::game_log = {};
 
-Game_Warsow::Game_Warsow(Player* players_adress, short player_with_initiative_copy)
+Game_Warsow::Game_Warsow(Player* players_adress)
+	: player_who_begins_the_game(get_important_player()),
+	player_who_lost_warsow(get_important_player_adress())
 {
+	basic_stake = 1;
 	thrown[0] = NULL;
 	thrown[1] = NULL;
 	thrown[2] = NULL;
-	player_with_initiative = player_with_initiative_copy;
+	throwing_player = player_who_begins_the_game;
 	players_pointer[0] = &players_adress[0];
 	players_pointer[1] = &players_adress[1];
 	players_pointer[2] = &players_adress[2];
 	values_of_thrown_cards[3-1] = { 0 };
 	sum_of_points_from_current_trick = 0;
+	
 }
 
-void Game_Warsow::play_warsow(short game_points_multiplier) {
-	for (int i = 0; i < NUMBER_OF_CARDS_IN_PLAYER_HAND_BEFORE_THROWING; i++)
-		play_trick();
-	player_with_initiative = who_has_the_most_points();
-
-	players_pointer[which_player_after_player_with_initiative(1)]->add_game_points(2 ^ (game_points_multiplier - 1));
-	players_pointer[which_player_after_player_with_initiative(2)]->add_game_points(2 ^ (game_points_multiplier - 1));
-	cout << "Przegral gracz " << players_pointer[player_with_initiative]->get_name() << " uzyskujac " << players_pointer[player_with_initiative]->get_trick_points() << "pkt.\n";
-	switch (game_points_multiplier)
-	{
-	case 1:
-		cout << "Graliscie w Warszawe. Przegrana za 1 pkt!\n\n";
-		break;
-
-	case 2:
-		cout << "Graliscie w kontre-warszawe. Przegrana za 2 pkt!\n\n";
-		break;
-
-	case 3:
-		cout << "Graliscie w rekontre-warszawe. Przegrana za 4 pkt!\n\n";
-		break;
-
-	default:
-		cout << "Blad w 4 switchu w run.cpp" << endl << endl;
-		break;
+bool Game_Warsow::checking_the_condition_which_depends_from_gametype(short i) {
+	if (players_pointer[throwing_player]->get_trick_points() > 60) {
+		player_who_lost_warsow = throwing_player;
+		return false;
 	}
-
-
-
+	else if (i = NUMBER_OF_CARDS_IN_PLAYER_HAND_BEFORE_THROWING - 1 && variable_replaced_by_reference == ANY_OF_PLAYERS) {
+		player_who_lost_warsow = who_has_the_most_points();
+	}
+	return true;
 }
-short Game_Warsow::play_trick()
-{
-	who_is_winning_trick = ANY_OF_PLAYERS;
-	thrown[0] = {};
-	thrown[1] = {};
-	thrown[2] = {};
 
+void Game_Warsow::show_info_about_game() {
+	std::cout << "Warszawe przegral " << players_pointer[player_who_lost_warsow]->get_name() << std::endl <<
+		"PKT SZTYCHOWE " << players_pointer[player_who_lost_warsow]->get_trick_points() << std::endl
+		<< "PKT GRY ktore uzyskali pozostali gracze " << players_pointer[(player_who_lost_warsow + 1) % 3]->get_game_points();
+	system("pause");
+}
 
-	player_throws_card_then_it_is_evaluated(player_with_initiative);
-	who_is_winning_trick = player_with_initiative;
-	player_throws_card_then_it_is_evaluated(which_player_after_player_with_initiative(1));
-	who_is_winning_trick = compare_two_cards(player_with_initiative, which_player_after_player_with_initiative(1));
-	player_throws_card_then_it_is_evaluated(which_player_after_player_with_initiative(2));
-	who_is_winning_trick = compare_two_cards(who_is_winning_trick, which_player_after_player_with_initiative(2));
-
+void Game_Warsow::sum_up_and_give_trick_points_to_player_who_won_trick() {
 	sum_of_points_from_current_trick = values_of_thrown_cards[0] + values_of_thrown_cards[1] + values_of_thrown_cards[2];
-
 	players_pointer[who_is_winning_trick]->add_trick_points(sum_of_points_from_current_trick);
-	game_log_actualization(who_is_winning_trick, 2);
-	remove_thrown_cards_from_players_hands();
-	player_with_initiative = who_is_winning_trick;
-
-	return who_is_winning_trick;
 }
 
-
-void Game_Warsow::game_log_actualization(short who, short situation)
+void Game_Warsow::game_log_update(short who, short situation)
 {
 	string log_line = "";
 	short tab_counter = 0;
@@ -87,12 +57,12 @@ void Game_Warsow::game_log_actualization(short who, short situation)
 	if (situation == 1) {
 
 		for (short i = 0; i < NUMBER_OF_PLAYERS; i++) {
-			if (thrown[which_player_after_player_with_initiative(i)] != NULL) {
+			if (thrown[which_player(i)] != NULL) {
 				log_line.append("\t");
 				tab_counter++;
-				log_line.append(players_pointer[which_player_after_player_with_initiative(i)]->get_name(), 0, 2);
+				log_line.append(players_pointer[which_player(i)]->get_name(), 0, 2);
 				log_line.append(":  ");
-				log_line.append(thrown[which_player_after_player_with_initiative(i)]->symbol);
+				log_line.append(thrown[which_player(i)]->symbol);
 			}
 
 		}
@@ -124,15 +94,17 @@ void Game_Warsow::game_log_actualization(short who, short situation)
 
 short Game_Warsow::who_has_the_most_points()
 {
-	short who = ANY_OF_PLAYERS, who2 = ANY_OF_PLAYERS;
-
-	who = (players_points[0] > players_points[1]) ? 0 : 1;
-	who2 = (players_points[who] > players_points[2]) ? who : 2;
-	return who2;
+	short who = ANY_OF_PLAYERS;
+	who = (	players_pointer[0]->get_trick_points() > players_pointer[1]->get_trick_points()) ? 0 : 1;
+	who = (players_pointer[who]->get_trick_points() > players_pointer[2]->get_trick_points()) ? who : 2;
+	return who;
 }
 
 
-
+void Game_Warsow::distribute_game_points() {
+		players_pointer[(player_who_lost_warsow + 1) % 3]->add_game_points(basic_stake * 2 ^ (get_game_points_multiplier() - 1));
+		players_pointer[(player_who_lost_warsow + 2) % 3]->add_game_points(basic_stake * 2 ^ (get_game_points_multiplier() - 1));
+	}
 
 
 

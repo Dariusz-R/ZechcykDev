@@ -21,7 +21,6 @@
   <ItemGroup>
     <ClInclude Include="Auction.h" />
     <ClInclude Include="Card.h" />
-    <ClInclude Include="Deck.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Game_Colour.h" />
     <ClInclude Include="Game_Durh.h" />
@@ -34,7 +33,6 @@
   <ItemGroup>
     <ClCompile Include="Auction.cpp" />
     <ClCompile Include="Card.cpp" />
-    <ClCompile Include="Deck.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Game_Colour.cpp" />
     <ClCompile Include="Game_Durh.cpp" />

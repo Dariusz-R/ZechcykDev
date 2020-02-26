@@ -5,7 +5,7 @@
 #include "Card.h"
 
 
-using namespace std;
+
 
 char Card::symbol_pattern[6] = { '9', 'J', 'D', 'K', '1', 'A' };
 char Card::colour_pattern[4] = { '\3', '\4', '\6', '\5' };

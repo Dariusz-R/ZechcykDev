@@ -4,58 +4,56 @@
 #include <sstream>
 
 
-using namespace std;
-vector <string> Text::pl_OR_eng;
-vector <string> Text::start_menu;
-vector <string> Text::A_4;
-vector <string> Text::A_8;
-vector <string> Text::Warsow_txt;
-vector <string> Text::log_frames;
-vector <string> Text::log_message;
-vector <string> Text::game_log_message;
-string Text::language_version;
+std::vector <std::string> Text::pl_OR_eng;
+std::vector <std::string> Text::start_menu;
+std::vector <std::string> Text::A_4;
+std::vector <std::string> Text::A_8;
+std::vector <std::string> Text::Warsow_txt;
+std::vector <std::string> Text::log_frames;
+std::vector <std::string> Text::log_message;
+std::vector <std::string> Text::game_log_message;
+std::string Text::language_version;
 
-void Text::set_language_version(string lang) { 
+void Text::set_language_version(std::string lang) {
 	language_version = lang; 
 }
 
 
-void Text::read_text(vector <string> what, short begin, short end) {
+void Text::read_text(std::vector <std::string> what, short begin, short end) {
 	if (end == 0) {
 		end = what.size(); 
 		for (short i = begin; i < end; i++)
-			cout << what[i];
-	}
-	else if ((begin + end) <= what.size()) {
+			std::cout << what[i];
+	} else if ((begin + end) <= what.size()) {
 		for (short i = begin; i < (begin + end); i++)
-			cout << what[i];
-	}
-	else cout << "Cos nie tak z czytaniem tekstu";
+			std::cout << what[i];
+	} else 
+		std::cout << "Cos nie tak z czytaniem tekstu";
 }
 
 short Text::cin_check(short& cin_value , short range, bool first_menu)
 {
 
 	
-		if (cin.fail() || cin_value > range || cin_value < 1)
+		if (std::cin.fail() || cin_value > range || cin_value < 1)
 		{
-			cin.clear();
-			cin.ignore(100, '\n'); ///// !!!!!!!!!!!!!!!!!!!!!!1
+			std::cin.clear();
+			std::cin.ignore(100, '\n'); ///// !!!!!!!!!!!!!!!!!!!!!!1
 			system("CLS");
 			if (first_menu == true) {
 				read_text(pl_OR_eng, 1, 1);
-				cout << endl;
+				std::cout << std::endl;
 				read_text(pl_OR_eng, 2, 1);
-				cout << endl << endl << "                 ";
+				std::cout << std::endl << std::endl << "                 ";
 			}
 			else{
 				if (language_version == "Polish") {
 					read_text(pl_OR_eng, 1, 1);
-					cout << endl << endl << "                 ";
+					std::cout << std::endl << std::endl << "                 ";
 				}
 				else if (language_version == "English") {
 					read_text(pl_OR_eng, 2, 1);
-					cout << endl << endl << "                 ";
+					std::cout << std::endl << std::endl << "                 ";
 				}
 			}
 			system("pause");
@@ -65,14 +63,14 @@ short Text::cin_check(short& cin_value , short range, bool first_menu)
 		else return cin_value;
 	
 }
-void Text::cin_check(short& cin_value, short range, vector <short> allowed_values)
+void Text::cin_check(short& cin_value, short range, std::vector <short> allowed_values)
 {
 	bool correct_value = true;
 	
-	if (cin.fail() || cin_value > range - 1 || cin_value < 0)
+	if (std::cin.fail() || cin_value > range - 1 || cin_value < 0)
 	{
-		cin.clear();
-		cin.ignore(100, '\n'); ///// !!!!!!!!!!!!!!!!!!!!!!1
+		std::cin.clear();
+		std::cin.ignore(100, '\n'); ///// !!!!!!!!!!!!!!!!!!!!!!1
 		correct_value = false;
 	} else if (!allowed_values.empty()) {
 		correct_value = false;
@@ -88,7 +86,7 @@ void Text::cin_check(short& cin_value, short range, vector <short> allowed_value
 			read_text(pl_OR_eng, 2, 1);
 			
 		}
-		cout << endl << endl << "                 ";
+		std::cout << std::endl << std::endl << "                 ";
 		system("pause");
 		cin_value = -1;
 
@@ -103,12 +101,12 @@ void Text::cin_check(short& cin_value, short range, vector <short> allowed_value
 
 
 
-void Text::load_language_file( vector <string> &vector_name, string file_name , char delim) {
+void Text::load_language_file(std::vector <std::string> &vector_name, std::string file_name , char delim) {
 
-	string line;
-	fstream file;
+	std::string line;
+	std::fstream file;
 	
-	string path;
+	std::string path;
 
 	if (language_version == "Polish") {
 		path = ".\\Polish\\";
@@ -121,12 +119,12 @@ void Text::load_language_file( vector <string> &vector_name, string file_name , 
 	else if (language_version == "") path = ".\\Select_language\\pl_OR_eng.txt";
 		
 		
-	file.open(path, ios::in);
+	file.open(path, std::ios::in);
 
 
 	if (file.good() == false)
 	{
-		cout << "Blad podczas otwierania skryptu." << endl << endl;
+		std::cout << "Blad podczas otwierania skryptu." << std::endl << std::endl;
 		exit(0);
 	}
 	while (getline(file, line, delim))
@@ -152,18 +150,18 @@ void Text::load_language_version()
 }
 
 
-void Text::placing_text_in_center_of_the_frame( string &name_of_the_player, short &letters_per_side, string word) {
+void Text::placing_text_in_center_of_the_frame(std::string &name_of_the_player, short &letters_per_side, std::string word) {
 	
 	short one_if_even = 0;
 	if (word == "EVEN")
 		one_if_even = 1;
 
 	for (short i = 0; i < 27 - letters_per_side; i++) {
-		cout << " ";
+		std::cout << " ";
 	}
-	cout << name_of_the_player;
+	std::cout << name_of_the_player;
 	for (short i = 0; i < 27 + one_if_even - letters_per_side; i++) {
-		cout << " ";
+		std::cout << " ";
 	}
 }
 

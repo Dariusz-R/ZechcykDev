@@ -4,34 +4,73 @@
 #include <iostream>
 #include "Player.h"
 
-using namespace std ;
+
 
 class Game
-{	
-public:
-	static void read_game_log(short);
+{
+	// MEMBER VARIABLES
 protected:
+	
+	Card const* thrown[3];
+	Player* players_pointer[3];
+	short values_of_thrown_cards[3];
+
+	short throwing_player;
+	short variable_replaced_by_reference;
+	short who_is_winning_trick;
+	short player_who_won_the_trick;
+
+	static std::vector <std::string> game_log;
+
+	short basic_stake; 
+
 	enum {
 		ANY_OF_PLAYERS = 4,
 		NUMBER_OF_PLAYERS = 3,
-		NUMBER_OF_CARDS_IN_PLAYER_HAND_BEFORE_THROWING = 8
+		NUMBER_OF_CARDS_IN_PLAYER_HAND_BEFORE_THROWING = 8,
+		NO_ANSWER_YET = 2
 	};
-	Card const* thrown[3];
-	static vector <string> game_log;
-	short players_points[3];
-	Player* players_pointer[3];
-	short values_of_thrown_cards[3];
-	short player_with_initiative;
-	short who_is_winning_trick;
-	virtual void game_log_actualization(short, short = 1) = 0;
 
-	void player_throws_card_then_it_is_evaluated(short id_player);
-	void card_evaluation(Card const*, short&);
-	short which_player_after_player_with_initiative(short);
-	void remove_thrown_cards_from_players_hands();
-	virtual vector <short> what_player_can_throw(short);
+private:
+
+	static short important_player;
+	static short game_points_multiplier;
+
+	//METHODS
+public:
+	void play_game();
+	static void read_game_log(short);
+
+	static void set_important_player(short);
+	static short get_important_player();
+	static short & get_important_player_adress();
+
+	static void set_game_points_multiplier(short);
+	static short get_game_points_multiplier();
 	
-	virtual short compare_two_cards(short, short);
+protected: // ORDERED CHRONLOGICALLY
+
+  //void play_game(short); 
+  //{
+		short play_trick();
+		//{
+			short which_player(short);
+			void player_throws_card_then_it_is_evaluated(short id_player);
+			//{
+				virtual std::vector <short> what_player_can_throw(short);
+				void card_evaluation(Card const*, short&);
+			//}
+			virtual short compare_two_cards(short, short);
+			virtual void sum_up_and_give_trick_points_to_player_who_won_trick();
+			virtual void game_log_update(short, short = 1) = 0;
+			void remove_thrown_cards_from_players_hands();
+		//}
+		virtual bool checking_the_condition_which_depends_from_gametype(short) = 0;
+		virtual void distribute_game_points();
+		void clear_players_hands();
+		virtual void show_info_about_game() = 0;
+  //}
+	
 
 };
 #endif
