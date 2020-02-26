@@ -18,8 +18,7 @@ Card::Card(short which) {
 	symbol[0] = colour_pattern[(which - (which % 6))/6];
 	symbol[1] = ' ';
 	symbol[2] = symbol_pattern[which % 6];
-	if (symbol[2] == '1') { symbol[3] = '0'; }
-	else { symbol[3] = ' '; }
+	symbol[3] = symbol[2] == '1' ? '0' : ' ';
 	symbol[4] = 0;
 }
 

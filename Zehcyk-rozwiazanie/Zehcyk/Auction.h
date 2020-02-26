@@ -45,10 +45,9 @@ public:
 	std::string first_auction_player_see_four_cards();
 			short player_after_player_with_initiative(short);
 			void auction_log_update(short, short, short = 100);
-			static void read_auction_log(bool = true);
+			static void read_auction_log(bool);
 	bool player_see_eight_cards_decision_play_or_resign();
 	void players_see_eight_cards_decision_contra_misery_durh();
-	short show_first_auction_menu(short);
 	short get_auction_counter();
 	short get_player_with_initiative();
 	void player_picked_colour(short);

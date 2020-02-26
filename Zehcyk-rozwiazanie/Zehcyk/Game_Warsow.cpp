@@ -5,7 +5,7 @@
 
 
 
-vector <string> Game_Warsow::game_log = {};
+
 
 Game_Warsow::Game_Warsow(Player* players_adress)
 	: player_who_begins_the_game(get_important_player()),
@@ -15,7 +15,7 @@ Game_Warsow::Game_Warsow(Player* players_adress)
 	thrown[0] = NULL;
 	thrown[1] = NULL;
 	thrown[2] = NULL;
-	throwing_player = player_who_begins_the_game;
+	player_with_initiative = player_who_begins_the_game;
 	players_pointer[0] = &players_adress[0];
 	players_pointer[1] = &players_adress[1];
 	players_pointer[2] = &players_adress[2];
@@ -25,8 +25,8 @@ Game_Warsow::Game_Warsow(Player* players_adress)
 }
 
 bool Game_Warsow::checking_the_condition_which_depends_from_gametype(short i) {
-	if (players_pointer[throwing_player]->get_trick_points() > 60) {
-		player_who_lost_warsow = throwing_player;
+	if (players_pointer[player_with_initiative]->get_trick_points() > 60) {
+		player_who_lost_warsow = player_with_initiative;
 		return false;
 	}
 	else if (i = NUMBER_OF_CARDS_IN_PLAYER_HAND_BEFORE_THROWING - 1 && variable_replaced_by_reference == ANY_OF_PLAYERS) {
@@ -57,12 +57,12 @@ void Game_Warsow::game_log_update(short who, short situation)
 	if (situation == 1) {
 
 		for (short i = 0; i < NUMBER_OF_PLAYERS; i++) {
-			if (thrown[which_player(i)] != NULL) {
+			if (thrown[queue_of_throwing(i)] != NULL) {
 				log_line.append("\t");
 				tab_counter++;
-				log_line.append(players_pointer[which_player(i)]->get_name(), 0, 2);
+				log_line.append(players_pointer[queue_of_throwing(i)]->get_name(), 0, 2);
 				log_line.append(":  ");
-				log_line.append(thrown[which_player(i)]->symbol);
+				log_line.append(thrown[queue_of_throwing(i)]->symbol);
 			}
 
 		}

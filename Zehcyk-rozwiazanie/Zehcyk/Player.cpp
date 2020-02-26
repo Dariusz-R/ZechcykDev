@@ -49,7 +49,8 @@ void Player::name_player(short text_line_number) {
 		}
 
 	} while (incorrect_name == true);
-	name = name_to_pass;
+	name.append(name_to_pass);
+	name_shortcut.append(name_to_pass, 0, 2);
 }
 
 std::string Player::get_name() {
@@ -138,40 +139,27 @@ void Player::sort_cards(short how_many_cards)
 void Player::show(short how_many, std::string when)
 {
 
-	Text::read_text(Text::A_4, 0, 1);
-	short letters_per_side = 0;
-	if (name.size() % 2 == 1) {
-		letters_per_side = (name.size() - 1) / 2;
-		Text::placing_text_in_center_of_the_frame(name, letters_per_side);
-	}
-	else if (name.size() % 2 == 0) {
-		letters_per_side = name.size() / 2;
-		Text::placing_text_in_center_of_the_frame(name, letters_per_side, "EVEN");
-	}
-	Text::read_text(Text::A_4, 1, 1);
+	std::cout << "\t\t\t\t\t\t\t\t*\r\t*";
+	std::cout << std::setw(27 + name.size() / 2) << name << std::endl;
+	std::cout << Text::frames[0] << Text::frames[5];
+	std::cout << "\t\t\t\t\t\t\t\t*\r\t*     ";
+
 	for (short i = 0; i < 8; i++) {
 		if (i < how_many)
 			std::cout << player_cards[i]->symbol << "  ";
 		else std::cout << "      ";
 	}
-
-	Text::read_text(Text::A_4, 2, 1);
-	if (when == "AUCTION") {
-		Text::read_text(Text::A_4, 5, 1);
-
-	} else if (when == "GAME"){
-		Text::read_text(Text::A_4, 3, 1);
+	std::cout << std::endl;
+	
+	 if (when == "GAME"){
+		std::cout << "\t\t\t\t\t\t\t\t*\r\t*      ";
 		for (short i = 0; i < 8; i++)
 		{
-			if (i < how_many) std::cout << i + 1 << "     ";
-			else std::cout << "      ";
-
+			i < how_many ? std::cout << i + 1 << "     " : std::cout << "      ";
 		}
-		Text::read_text(Text::A_4, 4, 2);
 		std::cout << std::endl;
-
-	}
-
+	 }
+	 std::cout << Text::frames[9];
 
 }
 
@@ -197,13 +185,7 @@ Card const* Player::which_card_I_throw(std::vector<short> what_may_I_throw)
 		do
 		{
 			last_thrown_card_iterator = 0;
-			Text::read_text(Text::log_frames, 0, 1);
-			Auction::read_auction_log(false);
-			Text::read_text(Text::log_frames, 1, 1);
-			Game_Warsow::read_game_log(2);
-			show(player_cards.size(), "GAME");
-			show_me_what_I_can_throw(what_may_I_throw);
-			Text::read_text(Text::Warsow_txt, 0, 1);
+			Text::show_game(this, what_may_I_throw);
 			std::cin >> last_thrown_card_iterator;
 			last_thrown_card_iterator--;
 			Text::cin_check(last_thrown_card_iterator, player_cards.size(), what_may_I_throw);
@@ -223,35 +205,23 @@ Card const* Player::which_card_I_throw(std::vector<short> what_may_I_throw)
 void Player::show_me_what_I_can_throw(std::vector<short> what_may_I_throw)
 {
 	if (what_may_I_throw.empty()) {
-		Text::read_text(Text::log_frames, 3, 1);
+		std::cout << Text::frames[7];
 	}
 	else {
-		std::string information_for_me = "";
-		Text::read_text(Text::log_frames, 2, 1);
-		std::cout << std::setw(9) << "*";
+		std::string what_may_I_throw_text_for_player = "";
+		for (short i = 0; i < what_may_I_throw.size(); i++) {
+			what_may_I_throw_text_for_player.append("   ");
+			what_may_I_throw_text_for_player.append(std::to_string(what_may_I_throw[i]+1));
+		}
 
-		if (what_may_I_throw.size() == 1) {
-			std::cout << std::setw(28) << what_may_I_throw[0] + 1 << std::setw(28) << "*" << std::endl;
+		std::cout << Text::frames[8];
+		std::cout << "\t\t\t\t\t\t\t\t*\r\t*";
+		if (what_may_I_throw.size() % 2 == 1)
+			std::cout << std::setw(27 + 4 * (what_may_I_throw.size() / 2)) << what_may_I_throw_text_for_player << std::endl;
+		else {
+			std::cout << std::setw(25 + 2 * what_may_I_throw.size()) << what_may_I_throw_text_for_player << std::endl;
 		}
-		else if ((what_may_I_throw.size() % 2) == 1) {
-			for (short i = 0; i < what_may_I_throw.size(); i++) {
-				std::string number = std::to_string(what_may_I_throw[i] + 1);
-				information_for_me.append("   ");
-				information_for_me.append(number);
-			}
-			short how_many_signes_from_center = 4 * (what_may_I_throw.size() - 1) / 2;
-			std::cout << std::setw(28 + how_many_signes_from_center) << information_for_me << std::setw(28 - how_many_signes_from_center) << "*" << std::endl;
-		}
-		else if ((what_may_I_throw.size() % 2) == 0) {
-			for (short i = 0; i < what_may_I_throw.size(); i++) {
-				std::string number = std::to_string(what_may_I_throw[i] + 1);
-				information_for_me.append("   ");
-				information_for_me.append(number);
-			}
-			short how_many_signes_from_center = 4 * what_may_I_throw.size() / 2 - 2;
-			std::cout << std::setw(28 + how_many_signes_from_center) << information_for_me << std::setw(28 - how_many_signes_from_center) << "*" << std::endl;
-		}
-		Text::read_text(Text::log_frames, 4, 1);
+		std::cout << Text::frames[0];
 	}
 }
 
@@ -301,6 +271,10 @@ void Player::add_trick_points(short points) {
 
 short Player::get_trick_points() {
 	return trick_points;
+}
+
+std::string Player::get_name_shortcut() {
+	return name_shortcut;
 }
 
 void Player::reset_trick_points() {

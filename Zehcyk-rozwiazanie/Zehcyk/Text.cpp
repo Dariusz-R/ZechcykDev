@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "Auction.h"
+#include "Game.h"
 
 
 std::vector <std::string> Text::pl_OR_eng;
@@ -12,7 +14,10 @@ std::vector <std::string> Text::Warsow_txt;
 std::vector <std::string> Text::log_frames;
 std::vector <std::string> Text::log_message;
 std::vector <std::string> Text::game_log_message;
+std::vector <std::string> Text::frames;
+std::vector <std::string> Text::auction_text;
 std::string Text::language_version;
+std::string Text::one_line_frame = "\t\t\t\t\t\t\t\t*\r\t*";
 
 void Text::set_language_version(std::string lang) {
 	language_version = lang; 
@@ -146,30 +151,55 @@ void Text::load_language_version()
 		load_language_file(A_8, "auction_eight_cards_pl.txt");
 		load_language_file(Warsow_txt, "game_warsow_pl.txt");
 		load_language_file(game_log_message, "game_log_message_pl.txt", '\n');
-	}
-}
-
-
-void Text::placing_text_in_center_of_the_frame(std::string &name_of_the_player, short &letters_per_side, std::string word) {
-	
-	short one_if_even = 0;
-	if (word == "EVEN")
-		one_if_even = 1;
-
-	for (short i = 0; i < 27 - letters_per_side; i++) {
-		std::cout << " ";
-	}
-	std::cout << name_of_the_player;
-	for (short i = 0; i < 27 + one_if_even - letters_per_side; i++) {
-		std::cout << " ";
+		load_language_file(frames, "frames_pl.txt");
+		load_language_file(auction_text, "auction_pl.txt");
 	}
 }
 
 
 
+void Text::show_first_auction_menu(Player * player, short situation) {
+
+	std::cout << Text::frames[1];
+	Auction::read_auction_log(true);
+	std::cout << Text::frames[0];
+	player->show(4 , "AUCTION");
+	std::cout << Text::frames[6];
+	std::cout << Text::auction_text[0];
+	switch (situation) {
+	case 0:
+		std::cout << Text::auction_text[1];
+		break;
+	case 1:
+		std::cout << Text::auction_text[2];
+		break;
+	case 2:
+		std::cout << Text::auction_text[3];
+		break;
+	default:
+		system("CLS");
+		std::cout << "ERROR 55" << std::endl;
+		system("pause");
+	}
+	std::cout << Text::frames[9];
+	std::cout << Text::frames[10];
+
+}
 	
 
 
 	
+void Text::show_game(Player* player, std::vector<short> what_may_I_throw_copy) {
 
+	std::cout << frames[1];
+	Auction::read_auction_log(false);
+	std::cout << frames[0];
+	std::cout << frames[2];
+	Game::read_game_log();
+	Game::read_trick_log();
+	std::cout << frames[0];
+	player->show(8, "GAME");
+	player->show_me_what_I_can_throw(what_may_I_throw_copy);
+	std::cout << frames[12];
+}
 

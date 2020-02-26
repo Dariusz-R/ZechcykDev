@@ -8,6 +8,8 @@
 
 class Game
 {
+
+	static std::string current_trick_log;
 	// MEMBER VARIABLES
 protected:
 	
@@ -15,12 +17,13 @@ protected:
 	Player* players_pointer[3];
 	short values_of_thrown_cards[3];
 
-	short throwing_player;
+	short player_with_initiative;
 	short variable_replaced_by_reference;
 	short who_is_winning_trick;
 	short player_who_won_the_trick;
 
 	static std::vector <std::string> game_log;
+	static std::vector <std::string> trick_log;
 
 	short basic_stake; 
 
@@ -39,7 +42,8 @@ private:
 	//METHODS
 public:
 	void play_game();
-	static void read_game_log(short);
+	static void read_trick_log();
+	static void read_game_log();
 
 	static void set_important_player(short);
 	static short get_important_player();
@@ -54,15 +58,16 @@ protected: // ORDERED CHRONLOGICALLY
   //{
 		short play_trick();
 		//{
-			short which_player(short);
+			short queue_of_throwing(short);
 			void player_throws_card_then_it_is_evaluated(short id_player);
 			//{
 				virtual std::vector <short> what_player_can_throw(short);
-				void card_evaluation(Card const*, short&);
+				void trick_log_update(short who);
+				virtual void card_evaluation(Card const*, short&);
 			//}
 			virtual short compare_two_cards(short, short);
 			virtual void sum_up_and_give_trick_points_to_player_who_won_trick();
-			virtual void game_log_update(short, short = 1) = 0;
+			virtual void game_log_update(short, short = 1);
 			void remove_thrown_cards_from_players_hands();
 		//}
 		virtual bool checking_the_condition_which_depends_from_gametype(short) = 0;

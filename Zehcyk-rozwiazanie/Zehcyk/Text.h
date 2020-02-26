@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "Player.h"
 
 
 class Text
@@ -10,6 +11,7 @@ class Text
 	
 	public:
 	static std::string language_version;
+	static std::string one_line_frame;
 	static std::vector <std::string> pl_OR_eng;
 	static std::vector <std::string> log_frames;
 	static std::vector <std::string> log_message;
@@ -18,15 +20,18 @@ class Text
 	static std::vector <std::string> A_8;
 	static std::vector <std::string> Warsow_txt;
 	static std::vector <std::string> game_log_message;
+	static std::vector <std::string> frames;
+	static std::vector <std::string> auction_text;
 
 
 	static void set_language_version(std::string);
-	static void placing_text_in_center_of_the_frame(std::string&, short&, std::string = "");
 		static short cin_check(short&, short, bool = false);
 		static void cin_check(short&, short, std::vector<short>);
 		static void load_language_version();
 		static void read_text(std::vector<std::string>, short, short);
 		static void load_language_file(std::vector <std::string> &, std::string = "", char = '#');
+		static void show_first_auction_menu(Player*, short);
+		static void show_game(Player*, std::vector<short>);
 };
 #endif
 

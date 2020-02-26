@@ -30,7 +30,7 @@ public:
 	bool checking_the_condition_which_depends_from_gametype(short i);
 	void sum_up_and_give_trick_points_to_player_who_won_trick();
 	void show_info_about_game();
-	void game_log_update(short, short = 1);
+	//void game_log_update(short, short = 1);
 	short sum_of_points_from_current_trick;
 	std::vector <short> what_player_can_throw(short);
 	short compare_two_cards(short, short);

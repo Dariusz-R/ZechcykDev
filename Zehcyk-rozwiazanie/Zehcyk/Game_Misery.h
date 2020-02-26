@@ -21,6 +21,7 @@ class Game_Misery : public Game {
 public:
 	Game_Misery(Player*);
 	void game_log_update(short, short = 1);
+	void card_evaluation(Card const* card_to_evaluate, short& conteiner);
 
 	
 	

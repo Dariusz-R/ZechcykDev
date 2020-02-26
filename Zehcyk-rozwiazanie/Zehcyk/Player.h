@@ -11,6 +11,7 @@
 class Player
 {   //PRIVATE DATA MEMBERS
     std::string name;
+    std::string name_shortcut;
     short  trick_points, game_points ;
     std::vector <const Card*> player_cards;
     short last_thrown_card_iterator;
@@ -44,6 +45,7 @@ public:
     bool do_I_want_to_meld();
     void add_trick_points(short);
     short get_trick_points();
+    std::string get_name_shortcut();
     void reset_trick_points();
     void erase_thrown_card();
 
