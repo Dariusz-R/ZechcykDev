@@ -8,7 +8,7 @@
 #include <string>
 #include "Auction.h"
 #include <iomanip>
-#include "Game_Warsow.h"
+#include "GameWarsow.h"
 
 
 
@@ -26,44 +26,44 @@ Player::Player()
 :SORT_LIKE_FOR_MISERY(9)
 {
 	std::string name = "";
-	trick_points = 0; 
-	game_points = 0;
-	last_thrown_card_iterator = 8;
+	trickPoints = 0; 
+	gamePoints = 0;
+	lastThrownCardIterator = 8;
 }
 
-void Player::name_player(short text_line_number) {
-	std::string name_to_pass = "";
-	bool incorrect_name = true;
+void Player::namePlayer(short textLineNumber) {
+	std::string nameToPass = "";
+	bool incorrectName = true;
 	do {
-		Text::read_text(Text::start_menu, text_line_number, 1);
-		std::getline(std::cin >> std::ws, name_to_pass, '\n');
-		if (name_to_pass.size() < 15)
-			incorrect_name = false;
+		Text::readText(Text::start_menu, textLineNumber, 1);
+		std::getline(std::cin >> std::ws, nameToPass, '\n');
+		if (nameToPass.size() < 15)
+			incorrectName = false;
 		else {
 			system("CLS");
 			std::cout << std::endl;
-			Text::read_text(Text::start_menu, 9, 1);
+			Text::readText(Text::start_menu, 9, 1);
 			std::cout << std::endl << std::endl << "                    ";
 			system("Pause");
 			system("CLS");
 		}
 
-	} while (incorrect_name == true);
-	name.append(name_to_pass);
-	name_shortcut.append(name_to_pass, 0, 2);
+	} while (incorrectName == true);
+	name.append(nameToPass);
+	nameShortcut.append(nameToPass, 0, 2);
 }
 
-std::string Player::get_name() {
+std::string Player::getName() {
 	return name;
 }
 
-void Player::take_card(const Card* card_to_take) {
-	player_cards.push_back(card_to_take);
+void Player::takeCardFromTheDeck(const Card* cardToTake) {
+	playerCards.push_back(cardToTake);
 }
 
 // USED IN PHASE 1 AND 2:
 
-void Player::sort_cards(short how_many_cards)
+void Player::sortCards(short how_many_cards)
 {
 	short sort_value[8] = {0,0,0,0,0,0,0,0};
 	bool misery = false;
@@ -74,7 +74,7 @@ void Player::sort_cards(short how_many_cards)
 	}
 
 	for (short i = 0; i < how_many_cards; i++) {
-		switch (player_cards[i]->colour) {
+		switch (playerCards[i]->colour) {
 		case 1:
 			break;
 		case 2:
@@ -90,7 +90,7 @@ void Player::sort_cards(short how_many_cards)
 			std::cout << "BLAD SORTOWANIA" << std::endl << std::endl;
 			break;
 		}
-		switch (player_cards[i]->symbol[2]) {
+		switch (playerCards[i]->symbol[2]) {
 		case '9':
 			break;
 		case 'J':
@@ -125,7 +125,7 @@ void Player::sort_cards(short how_many_cards)
 			if (sort_value[j] > sort_value[j + 1])
 			{
 				std::swap(sort_value[j], sort_value[j + 1]);
-				std::swap(player_cards[j], player_cards[j + 1]);
+				std::swap(playerCards[j], playerCards[j + 1]);
 				swapped = true;
 			}
 		}
@@ -146,7 +146,7 @@ void Player::show(short how_many, std::string when)
 
 	for (short i = 0; i < 8; i++) {
 		if (i < how_many)
-			std::cout << player_cards[i]->symbol << "  ";
+			std::cout << playerCards[i]->symbol << "  ";
 		else std::cout << "      ";
 	}
 	std::cout << std::endl;
@@ -163,101 +163,101 @@ void Player::show(short how_many, std::string when)
 
 }
 
-void Player::throw_out_all_remain_cards() {
-	player_cards.clear();
+void Player::throwOutAllRemainInHandCards() {
+	playerCards.clear();
 }
 
-void Player::add_game_points(short points) {
-	game_points += points;
+void Player::addGamePoints(short points) {
+	gamePoints += points;
 }
 
-short Player::get_game_points() {
-	return game_points;
+short Player::getGamePoints() {
+	return gamePoints;
 }
 
 // USED IN PHASE 3:
 
-Card const* Player::which_card_I_throw(std::vector<short> what_may_I_throw)
+Card const* Player::whichCardPlayerThrow(std::vector<short> whatMayIThrow)
 {
-	if (player_cards.size() != 1)
+	if (playerCards.size() != 1)
 	{
 
 		do
 		{
-			last_thrown_card_iterator = 0;
-			Text::show_game(this, what_may_I_throw);
-			std::cin >> last_thrown_card_iterator;
-			last_thrown_card_iterator--;
-			Text::cin_check(last_thrown_card_iterator, player_cards.size(), what_may_I_throw);
+			lastThrownCardIterator = 0;
+			Text::showGame(this, whatMayIThrow);
+			std::cin >> lastThrownCardIterator;
+			lastThrownCardIterator--;
+			Text::cinCheck(lastThrownCardIterator, playerCards.size(), whatMayIThrow);
 			system("CLS");
-		} while (last_thrown_card_iterator == -1);
-		return player_cards[last_thrown_card_iterator];
+		} while (lastThrownCardIterator == -1);
+		return playerCards[lastThrownCardIterator];
 	}
 	else
 	{
-		show(player_cards.size(), "GAME");
+		show(playerCards.size(), "GAME");
 		std::cout << "Ostatnia Twoja karta zostanie rzucona\n\n";
 		system("PAUSE");
-		return player_cards[0];
+		return playerCards[0];
 	}
 }
 
-void Player::show_me_what_I_can_throw(std::vector<short> what_may_I_throw)
+void Player::showMeWhatICanThrow(std::vector<short> whatMayPlayerThrow)
 {
-	if (what_may_I_throw.empty()) {
+	if (whatMayPlayerThrow.empty()) {
 		std::cout << Text::frames[7];
 	}
 	else {
-		std::string what_may_I_throw_text_for_player = "";
-		for (short i = 0; i < what_may_I_throw.size(); i++) {
-			what_may_I_throw_text_for_player.append("   ");
-			what_may_I_throw_text_for_player.append(std::to_string(what_may_I_throw[i]+1));
+		std::string whatMayIThrowTextForPlayer = "";
+		for (short i = 0; i < whatMayPlayerThrow.size(); i++) {
+			whatMayIThrowTextForPlayer.append("   ");
+			whatMayIThrowTextForPlayer.append(std::to_string(whatMayPlayerThrow[i]+1));
 		}
 
 		std::cout << Text::frames[8];
 		std::cout << "\t\t\t\t\t\t\t\t*\r\t*";
-		if (what_may_I_throw.size() % 2 == 1)
-			std::cout << std::setw(27 + 4 * (what_may_I_throw.size() / 2)) << what_may_I_throw_text_for_player << std::endl;
+		if (whatMayPlayerThrow.size() % 2 == 1)
+			std::cout << std::setw(27 + 4 * (whatMayPlayerThrow.size() / 2)) << whatMayIThrowTextForPlayer << std::endl;
 		else {
-			std::cout << std::setw(25 + 2 * what_may_I_throw.size()) << what_may_I_throw_text_for_player << std::endl;
+			std::cout << std::setw(25 + 2 * whatMayPlayerThrow.size()) << whatMayIThrowTextForPlayer << std::endl;
 		}
 		std::cout << Text::frames[0];
 	}
 }
 
-std::vector <short> Player::how_many_card_in_thrown_colour_i_have(short colour) {
+std::vector <short> Player::checkHowManyCardsInThrownCardColourPlayerHave(short colour) {
 	std::vector <short> iterators_of_cards_in_colour = {};
-	for (short i = 0; i < player_cards.size(); i++) {
-		if (player_cards[i]->colour == colour) {
+	for (short i = 0; i < playerCards.size(); i++) {
+		if (playerCards[i]->colour == colour) {
 			iterators_of_cards_in_colour.push_back(i);
 		}
 	}
 	return iterators_of_cards_in_colour;
 }
 
-Card const* Player::share_card(short i) {
-	return player_cards[i];
+Card const* Player::shareCard(short i) {
+	return playerCards[i];
 }
 
-bool Player::do_I_have_queen_and_king_in_one_colour() {
-	if (player_cards[last_thrown_card_iterator]->symbol[2] == 'D' && (last_thrown_card_iterator + 1) < player_cards.size()) {
-		if (player_cards[last_thrown_card_iterator + 1]->symbol[2] == 'K' && player_cards[last_thrown_card_iterator]->colour == player_cards[last_thrown_card_iterator + 1]->colour)
+bool Player::checkIfPlayerHaveAKingAndQueenInOneColour() {
+	if (playerCards[lastThrownCardIterator]->symbol[2] == 'D' && (lastThrownCardIterator + 1) < playerCards.size()) {
+		if (playerCards[lastThrownCardIterator + 1]->symbol[2] == 'K' && playerCards[lastThrownCardIterator]->colour == playerCards[lastThrownCardIterator + 1]->colour)
 			return true;
 	}
-	else if (player_cards[last_thrown_card_iterator]->symbol[2] == 'K' && (last_thrown_card_iterator - 1) > 0) {
-		if (player_cards[last_thrown_card_iterator - 1]->symbol[2] == 'D' && player_cards[last_thrown_card_iterator]->colour == player_cards[last_thrown_card_iterator - 1]->colour)
+	else if (playerCards[lastThrownCardIterator]->symbol[2] == 'K' && (lastThrownCardIterator - 1) > 0) {
+		if (playerCards[lastThrownCardIterator - 1]->symbol[2] == 'D' && playerCards[lastThrownCardIterator]->colour == playerCards[lastThrownCardIterator - 1]->colour)
 			return true;
 	}
 	return false;
 }
 
-bool Player::do_I_want_to_meld() {
+bool Player::askPlayerIfHeWantToMeld() {
 
 	system("CLS");
 	short yes_or_no = 3;
 	std::cout << " CHcesz zameldowac?" << std::endl;
 	std::cin >> yes_or_no;
-	Text::cin_check(yes_or_no, 2);
+	Text::cinCheck(yes_or_no, 2);
 
 	if (yes_or_no == 2)
 		return false;
@@ -265,25 +265,25 @@ bool Player::do_I_want_to_meld() {
 		return true;
 }
 
-void Player::add_trick_points(short points) {
-	trick_points += points;
+void Player::addTrickPoints(short points) {
+	trickPoints += points;
 }
 
-short Player::get_trick_points() {
-	return trick_points;
+short Player::getTrickPoints() {
+	return trickPoints;
 }
 
-std::string Player::get_name_shortcut() {
-	return name_shortcut;
+std::string Player::getNameShortcut() {
+	return nameShortcut;
 }
 
-void Player::reset_trick_points() {
-	trick_points = NULL;
+void Player::resetTrickPoints() {
+	trickPoints = NULL;
 }
 
-void Player::erase_thrown_card()
+void Player::eraseThrownCardFromPlayerHand()
 {
-	player_cards.erase(player_cards.begin() + last_thrown_card_iterator);
+	playerCards.erase(playerCards.begin() + lastThrownCardIterator);
 }
 
 

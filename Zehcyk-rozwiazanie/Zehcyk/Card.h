@@ -6,6 +6,7 @@
 
 class Card
 {
+    static short card_counter;
     static short values_pattern[6];
     static char symbol_pattern[6];
     static char colour_pattern[4];
@@ -14,7 +15,7 @@ class Card
     short colour ;
 
 public:
-    Card(short);
+    Card();
 
 };
 

@@ -1,6 +1,7 @@
-#include <iostream>
 #include "Run.h"
 #include "Text.h"
+
+#include <iostream>
 #include <windows.h>
 #include <vector>
 
@@ -10,10 +11,13 @@
 
 
 
+
+
+
+
 Run::Run()
 	:
-	deck_pattern{ Card(0), Card(1), Card(2), Card(3), Card(4), Card(5), Card(6), Card(7), Card(8), Card(9), Card(10), Card(11), Card(12), Card(13), Card(14), Card(15),
-	Card(16), Card(17), Card(18), Card(19), Card(20), Card(21), Card(22), Card(23) }
+	deck_pattern{ Card()}
 	
 {
 	for (short i = 0; i < 24; i++) {
@@ -34,35 +38,35 @@ void Run::run_general() {
 	std::string result_of_the_first_auction;
 	do {
 		player_who_begins_the_auction++;
-		auction.reset_private_variables();
+		auction.resetPrivateVariables();
 		shuffle_cards();
 		give_cards_to_players();
 
-		result_of_the_first_auction = auction.first_auction_player_see_four_cards();
+		result_of_the_first_auction = auction.carryFirstAuction();
 
 		if (result_of_the_first_auction == "COLOUR")
-			play = auction.player_see_eight_cards_decision_play_or_resign();
+			play = auction.confirmThatGameLeaderWantToPlayAfterHeSawAllHisCards();
 		else if (result_of_the_first_auction == "WARSOW") {
-			Game::set_important_player(auction.get_player_with_initiative());
-			Game::set_game_points_multiplier(auction.get_auction_counter());
-			Game_Warsow game_warsow(players);
-			game_warsow.play_game();
+			Game::setGameLeader(auction.getGameLeader());
+			Game::set_game_points_multiplier(auction.getAuctionCounter());
+			GameWarsow game_warsow(players);
+			game_warsow.playGame();
 		}
 
 	} while (play == false);
 
-	auction.players_see_eight_cards_decision_contra_misery_durh();
-	Game::set_important_player(auction.get_player_with_initiative());
-	Game::set_game_points_multiplier(auction.get_auction_counter());
+	auction.carrySecondAuction();
+	Game::setGameLeader(auction.getGameLeader());
+	Game::set_game_points_multiplier(auction.getAuctionCounter());
 	if (game_type > 0 && game_type < 5){
-		Game_Colour game_colour(players, game_type);
-		game_colour.play_game();
+		GameColour game_colour(players, game_type);
+		game_colour.playGame();
 	} else if (game_type == 7) {
-		Game_Durh game_durh(players);
-		game_durh.play_game();
+		GameDurh game_durh(players);
+		game_durh.playGame();
 	} else if (game_type == 8) {
-		Game_Misery game_misery(players);
-		game_misery.play_game();
+		GameMisery game_misery(players);
+		game_misery.playGame();
 	}
 }
 
@@ -70,9 +74,9 @@ void Run::select_language() {
 	short language_pack;
 	do {
 		Text::load_language_version();
-		Text::read_text(Text::pl_OR_eng, 0, 1);
+		Text::readText(Text::pl_OR_eng, 0, 1);
 		cin >> language_pack;
-		Text::cin_check(language_pack, 2, true);
+		Text::cinCheck(language_pack, 2, true);
 		if (language_pack == 1) { 
 			system("CLS");  
 			Text::set_language_version("Polish"); 
@@ -93,15 +97,15 @@ void Run::start()
 
 	do
 	{
-		Text::read_text(Text::start_menu,0,1);
+		Text::readText(Text::start_menu,0,1);
 		std::cin >> want_to_play;
 		loop_choice = false;
-		Text::cin_check(want_to_play, 3);
+		Text::cinCheck(want_to_play, 3);
 		if (want_to_play == 1) { 
 			loop_choice = true;
 			system("CLS"); 
 		} else if (want_to_play == 2) { 
-			Text::read_text(Text::start_menu, 1, 1);
+			Text::readText(Text::start_menu, 1, 1);
 			system("pause"); exit(0); 
 		} else if (want_to_play == 3) {  
 			ShellExecute(GetDesktopWindow(), L"open", L"\\Polish\\ZECHCYK2.pdf", NULL, NULL, SW_SHOWMAXIMIZED);
@@ -115,7 +119,7 @@ void Run::start()
 void Run::meet_players()
 {
 	for (short i = 0; i < 3; i++) {
-		players[i].name_player(i + 2 );
+		players[i].namePlayer(i + 2 );
 	}
 	players_introduction();
 	system("CLS");
@@ -125,10 +129,10 @@ void Run::players_introduction()
 {
 	system("CLS");
 	for (short i = 0; i < 3; i++) {
-		Text::read_text(Text::start_menu, 5 + i, 1);
-		std::cout << players[i].get_name();
+		Text::readText(Text::start_menu, 5 + i, 1);
+		std::cout << players[i].getName();
 	}
-	Text::read_text(Text::start_menu, 8, 1);
+	Text::readText(Text::start_menu, 8, 1);
 	system("pause");
 }
 
@@ -150,7 +154,7 @@ void Run::give_cards_to_players()
 	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < 4; j++)
 		{
-			players[i].take_card(deck_pointers[12*h+4*i+j]);
+			players[i].takeCardFromTheDeck(deck_pointers[12*h+4*i+j]);
 		}
 		
 	

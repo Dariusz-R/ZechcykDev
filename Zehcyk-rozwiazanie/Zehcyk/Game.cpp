@@ -5,27 +5,27 @@
 
 
 
-short Game::important_player;
+short Game::gameLeader;
 short Game::game_points_multiplier;
 std::vector <std::string> Game::game_log;
 std::vector <std::string> Game::trick_log;
 std::string Game::current_trick_log = "9\r\t\t\t\t\t\t\t\t*\r\t*        ";
 
 // PUBLIC METHODS ORDERED CHRONOLOGICALLY:
-void Game::set_important_player(short which_player) {
-	important_player = which_player;
+void Game::setGameLeader(short which_player) {
+	gameLeader = which_player;
 }
 
-short Game::get_important_player() {
-	return important_player;
+short Game::getGameLeader() {
+	return gameLeader;
 }
 
-short& Game::get_important_player_adress() {
-	return important_player;
+short& Game::getGameLeaderAdress() {
+	return gameLeader;
 }
 
 void Game::set_game_points_multiplier(short which_player) {
-	important_player = which_player;
+	gameLeader = which_player;
 }
 
 short Game::get_game_points_multiplier() {
@@ -56,9 +56,9 @@ void Game::read_game_log() {
 		}
 }
 
-void Game::play_game() {
+void Game::playGame() {
 	for (int i = 0; i < NUMBER_OF_CARDS_IN_PLAYER_HAND_BEFORE_THROWING; i++) {
-		 player_who_won_the_trick = play_trick();
+		 player_who_won_the_trick = playTrick();
 		if (checking_the_condition_which_depends_from_gametype(i) == false)
 			break;
 	}
@@ -69,7 +69,7 @@ void Game::play_game() {
 
 // PROTECTED METHODS ORDERED CHRONOLOGICALLY:
 
-short Game::play_trick()
+short Game::playTrick()
 {
 	who_is_winning_trick = ANY_OF_PLAYERS;
 	thrown[0] = {};
@@ -99,9 +99,9 @@ short Game::queue_of_throwing (short which_after_player_with_initiative) {
 
 void Game::player_throws_card_then_it_is_evaluated(short id_player) {
 	if (id_player == player_with_initiative)
-		thrown[player_with_initiative] = players_pointer[player_with_initiative]->which_card_I_throw();
+		thrown[player_with_initiative] = players_pointer[player_with_initiative]->whichCardPlayerThrow();
 	else
-		thrown[id_player] = players_pointer[id_player]->which_card_I_throw(what_player_can_throw(id_player));
+		thrown[id_player] = players_pointer[id_player]->whichCardPlayerThrow(what_player_can_throw(id_player));
 
 	trick_log_update(id_player);
 	card_evaluation(thrown[id_player], values_of_thrown_cards[id_player]);
@@ -115,9 +115,9 @@ void Game::trick_log_update(short who)
 			thrown_card_symbol[i] = (thrown[queue_of_throwing(i)] == NULL) ? "     " : thrown[queue_of_throwing(i)]->symbol;
 
 		current_trick_log = "9\r" + Text::one_line_frame + "        "
-			+ players_pointer[queue_of_throwing(0)]->get_name_shortcut() + ": " + thrown_card_symbol[0] + "      "
-			+ players_pointer[queue_of_throwing(1)]->get_name_shortcut() + ": " + thrown_card_symbol[1] + "      "
-			+ players_pointer[queue_of_throwing(2)]->get_name_shortcut() + ": " + thrown_card_symbol[2] ;
+			+ players_pointer[queue_of_throwing(0)]->getNameShortcut() + ": " + thrown_card_symbol[0] + "      "
+			+ players_pointer[queue_of_throwing(1)]->getNameShortcut() + ": " + thrown_card_symbol[1] + "      "
+			+ players_pointer[queue_of_throwing(2)]->getNameShortcut() + ": " + thrown_card_symbol[2] ;
 		if (thrown_card_symbol[0] != "     " && thrown_card_symbol[1] != "     " && thrown_card_symbol[2] != "     ") {
 			current_trick_log[0] = who_is_winning_trick;
 			trick_log.push_back(current_trick_log);
@@ -127,12 +127,12 @@ void Game::trick_log_update(short who)
 
 std::vector<short> Game::what_player_can_throw(short id_player) {
 	std::vector <short> values_of_the_player_cards_in_colour, player_cards_in_colour, player_cards_winning;
-	player_cards_in_colour = players_pointer[id_player]->how_many_card_in_thrown_colour_i_have(thrown[player_with_initiative]->colour);
+	player_cards_in_colour = players_pointer[id_player]->checkHowManyCardsInThrownCardColourPlayerHave(thrown[player_with_initiative]->colour);
 	if (!player_cards_in_colour.empty()) {
 
 		for (short i = 0; i < player_cards_in_colour.size(); i++) {
 			values_of_the_player_cards_in_colour.push_back(0);
-			card_evaluation(players_pointer[id_player]->share_card(player_cards_in_colour[i]), values_of_the_player_cards_in_colour[i]);
+			card_evaluation(players_pointer[id_player]->shareCard(player_cards_in_colour[i]), values_of_the_player_cards_in_colour[i]);
 			if (values_of_the_player_cards_in_colour[i] > values_of_thrown_cards[who_is_winning_trick]) {
 				player_cards_winning.push_back(player_cards_in_colour[i]);
 			}
@@ -197,26 +197,26 @@ void Game::sum_up_and_give_trick_points_to_player_who_won_trick() {
 
 void Game::game_log_update(short who, short situation) {
 	std::string log_line = "";
-	log_line = "9\r" + Text::one_line_frame + players_pointer[who]->get_name() + Text::game_log_message[0] + Text::game_log_message[1] +
+	log_line = "9\r" + Text::one_line_frame + players_pointer[who]->getName() + Text::game_log_message[0] + Text::game_log_message[1] +
 		Text::game_log_message[2];
 	game_log.push_back(log_line);
 }
 
 void Game::remove_thrown_cards_from_players_hands() {
 	for (short i = 0; i < NUMBER_OF_PLAYERS; i++)
-		players_pointer[i]->erase_thrown_card();
+		players_pointer[i]->eraseThrownCardFromPlayerHand();
 }
 
 void Game::distribute_game_points() {
 	if (variable_replaced_by_reference == true)
-		players_pointer[important_player]->add_game_points(basic_stake * 2 ^ (game_points_multiplier - 1));
+		players_pointer[gameLeader]->addGamePoints(basic_stake * 2 ^ (game_points_multiplier - 1));
 	else {
-		players_pointer[(important_player + 1) %3]->add_game_points(basic_stake * 2 ^ (game_points_multiplier - 1));
-		players_pointer[(important_player + 2) %3]->add_game_points(basic_stake * 2 ^ (game_points_multiplier - 1));
+		players_pointer[(gameLeader + 1) %3]->addGamePoints(basic_stake * 2 ^ (game_points_multiplier - 1));
+		players_pointer[(gameLeader + 2) %3]->addGamePoints(basic_stake * 2 ^ (game_points_multiplier - 1));
 	}
 }
 
 void Game::clear_players_hands() {
 	for (short i = 0; i < NUMBER_OF_PLAYERS; i++)
-		players_pointer[i]->throw_out_all_remain_cards();
+		players_pointer[i]->throwOutAllRemainInHandCards();
 }

@@ -18,3 +18,20 @@
 			    YOUR DECISION: #
 		      Program will now shut down.
 		      #
+		     The game is for three players
+			  Introduce players
+	    [ Allowed maximum name length - 14 signs ]
+
+		   Player number one: 
+		 	 #
+		   Player number two: 
+			 #
+		   Player number three:
+			 #			
+		           Today will play:
+ 
+			 #
+			 #
+			 #
+		      
+		      #	 Entered player name is to long. Try again.#

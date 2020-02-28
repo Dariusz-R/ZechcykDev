@@ -4,10 +4,10 @@
 #include <cmath>
 #include <time.h>
 #include "Text.h"
-#include "Game_Warsow.h"
-#include "Game_Colour.h"
-#include "Game_Misery.h"
-#include "Game_Durh.h"
+#include "GameWarsow.h"
+#include "GameColour.h"
+#include "GameMisery.h"
+#include "GameDurh.h"
 #include "Auction.h"
 #include <vector>
 

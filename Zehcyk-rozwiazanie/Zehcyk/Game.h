@@ -36,18 +36,18 @@ protected:
 
 private:
 
-	static short important_player;
+	static short gameLeader;
 	static short game_points_multiplier;
 
 	//METHODS
 public:
-	void play_game();
+	void playGame();
 	static void read_trick_log();
 	static void read_game_log();
 
-	static void set_important_player(short);
-	static short get_important_player();
-	static short & get_important_player_adress();
+	static void setGameLeader(short);
+	static short getGameLeader();
+	static short & getGameLeaderAdress();
 
 	static void set_game_points_multiplier(short);
 	static short get_game_points_multiplier();
@@ -56,7 +56,7 @@ protected: // ORDERED CHRONLOGICALLY
 
   //void play_game(short); 
   //{
-		short play_trick();
+		short playTrick();
 		//{
 			short queue_of_throwing(short);
 			void player_throws_card_then_it_is_evaluated(short id_player);
