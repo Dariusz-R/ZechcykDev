@@ -61,11 +61,17 @@ Game at this moment is fully in console. Soon GUI will be added.
 I have decided to divide program into 10 clases:
 
 Run - class responsible for running the program in the planned sequence
+
 Text - class responsible for loading and displaying text on the console
+
 Card - class responsible for creating cards and storing their symbols
+
 Player - class responsible for storing intel about player, it contains all methods connected with interaction with player
+
 Auction - class responsible for carring two auctions and asking player if he want to play after receiving second four cards.
+
 Game - base class for other game classes. Contains most of the methods responsible for carring the game.
+
 GameWarsow, GameColour, GameMisery, GameDurh - subclasses responsible for obtaining specyfic for each game type mechanics.
 
 
