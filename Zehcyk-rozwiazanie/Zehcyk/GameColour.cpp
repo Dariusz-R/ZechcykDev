@@ -7,28 +7,28 @@
 GameColour::GameColour(Player* players_adress, short trump_copy)
 	: player_who_chose_colour(getGameLeader()),
 	trump(trump_copy),
-	was_colour_successful(variable_replaced_by_reference)
+	was_colour_successful(variableReplacedByReference)
 {
-	basic_stake = 3;
+	basicStake = 3;
 	thrown[0] = NULL;
 	thrown[1] = NULL;
 	thrown[2] = NULL;
 	
-	player_with_initiative = player_who_chose_colour;
+	gameLeader = player_who_chose_colour;
 	players_pointer[0] = &players_adress[0];
 	players_pointer[1] = &players_adress[1];
 	players_pointer[2] = &players_adress[2];
-	values_of_thrown_cards[3-1] = { 0 };
+	valuesOfThrownCards[3-1] = { 0 };
 	sum_of_points_from_current_trick = 0;
 	did_other_players_meld = DID_NOT_MELD;
 	did_player_who_chose_color_meld = DID_NOT_MELD;
-	variable_replaced_by_reference = NO_ANSWER_YET;
+	variableReplacedByReference = NO_ANSWER_YET;
 	did_other_players_won_a_trick = false;
 	did_player_who_picked_a_colour_won_a_trick = false;
 }
 
 bool GameColour::checking_the_condition_which_depends_from_gametype(short i) {
-	if (who_is_winning_trick == player_who_chose_colour)
+	if (whoIsWinningTrick == player_who_chose_colour)
 		did_player_who_picked_a_colour_won_a_trick = true;
 	else
 		did_other_players_won_a_trick = true;
@@ -43,21 +43,21 @@ bool GameColour::checking_the_condition_which_depends_from_gametype(short i) {
 		return false;
 	}
 	else if (i = NUMBER_OF_CARDS_IN_PLAYER_HAND_BEFORE_THROWING - 1 && was_colour_successful == NO_ANSWER_YET) {
-		was_colour_successful = (player_who_won_the_trick == player_who_chose_colour) ? true : false;
+		was_colour_successful = (playerWhoWonTheTrick == player_who_chose_colour) ? true : false;
 			return true;
 	}
 }
 
 void GameColour::show_info_about_game() {
-	if (variable_replaced_by_reference == false)
+	if (variableReplacedByReference == false)
 		std::cout << "Kolor przegral " << players_pointer[player_who_chose_colour]->getName() << std:: endl;
 	else std::cout << "Kolor wygral " << players_pointer[player_who_chose_colour]->getName() << std::endl;
 	system("pause");
 }
 
 void GameColour::sum_up_and_give_trick_points_to_player_who_won_trick() {
-	sum_of_points_from_current_trick = values_of_thrown_cards[0] + values_of_thrown_cards[1] + values_of_thrown_cards[2];
-	players_pointer[who_is_winning_trick]->addTrickPoints(sum_of_points_from_current_trick);
+	sum_of_points_from_current_trick = valuesOfThrownCards[0] + valuesOfThrownCards[1] + valuesOfThrownCards[2];
+	players_pointer[whoIsWinningTrick]->addTrickPoints(sum_of_points_from_current_trick);
 }
 
 //void Game_Colour::game_log_update(short who, short situation)
@@ -106,15 +106,15 @@ void GameColour::sum_up_and_give_trick_points_to_player_who_won_trick() {
 
 std::vector<short> GameColour::what_player_can_throw(short id_player) {
 	std::vector <short> values_of_the_player_cards_in_colour, player_cards_in_colour, player_cards_winning;
-	player_cards_in_colour = players_pointer[id_player]->checkHowManyCardsInThrownCardColourPlayerHave(thrown[player_with_initiative]->colour);
-	if(thrown[player_with_initiative]->colour != trump && player_cards_in_colour.empty())
+	player_cards_in_colour = players_pointer[id_player]->checkHowManyCardsInThrownCardColourPlayerHave(thrown[gameLeader]->colour);
+	if(thrown[gameLeader]->colour != trump && player_cards_in_colour.empty())
 		player_cards_in_colour = players_pointer[id_player]->checkHowManyCardsInThrownCardColourPlayerHave(trump);
 	if (!player_cards_in_colour.empty()) {
 
 		for (short i = 0; i < player_cards_in_colour.size(); i++) {
 			values_of_the_player_cards_in_colour.push_back(0);
-			card_evaluation(players_pointer[id_player]->shareCard(player_cards_in_colour[i]), values_of_the_player_cards_in_colour[i]);
-			if (values_of_the_player_cards_in_colour[i] > values_of_thrown_cards[who_is_winning_trick]) {
+			EvaluateCard(players_pointer[id_player]->shareCard(player_cards_in_colour[i]), values_of_the_player_cards_in_colour[i]);
+			if (values_of_the_player_cards_in_colour[i] > valuesOfThrownCards[whoIsWinningTrick]) {
 				player_cards_winning.push_back(player_cards_in_colour[i]);
 			}
 
@@ -137,7 +137,7 @@ short GameColour::compare_two_cards(short id_player, short id2_player)
 	else {
 		if (thrown[id_player]->colour == thrown[id2_player]->colour) {
 
-			return (values_of_thrown_cards[id_player] < values_of_thrown_cards[id2_player]) ? id2_player : id_player;
+			return (valuesOfThrownCards[id_player] < valuesOfThrownCards[id2_player]) ? id2_player : id_player;
 
 		}
 		else
@@ -147,34 +147,34 @@ short GameColour::compare_two_cards(short id_player, short id2_player)
 }
 
 void GameColour::player_throws_card_then_it_is_evaluated(short id_player) {
-	if (id_player == player_with_initiative) {
-		thrown[player_with_initiative] = players_pointer[player_with_initiative]->whichCardPlayerThrow();
+	if (id_player == gameLeader) {
+		thrown[gameLeader] = players_pointer[gameLeader]->whichCardPlayerThrow();
 		add_points_if_meld();
 	}
 
 	else
 		thrown[id_player] = players_pointer[id_player]->whichCardPlayerThrow(what_player_can_throw(id_player));
 
-	trick_log_update(id_player);
-	card_evaluation(thrown[id_player], values_of_thrown_cards[id_player]);
+	updateTrickLog(id_player);
+	EvaluateCard(thrown[id_player], valuesOfThrownCards[id_player]);
 	system("CLS");
 }
 
 void  GameColour::add_points_if_meld() {
 	if (does_player_meld() == true) {
-		if (thrown[player_with_initiative]->colour == trump){
-			players_pointer[player_with_initiative]->addTrickPoints(NUMBER_OF_POINTS_FOR_MELD_IN_TRUMP_COLOUR);
+		if (thrown[gameLeader]->colour == trump){
+			players_pointer[gameLeader]->addTrickPoints(NUMBER_OF_POINTS_FOR_MELD_IN_TRUMP_COLOUR);
 			note_who_meld(NUMBER_OF_POINTS_FOR_MELD_IN_TRUMP_COLOUR);
 		}
 		else {
-			players_pointer[player_with_initiative]->addTrickPoints(NUMBER_OF_POINTS_FOR_MELD_IN_OTHER_COLOUR);
+			players_pointer[gameLeader]->addTrickPoints(NUMBER_OF_POINTS_FOR_MELD_IN_OTHER_COLOUR);
 			note_who_meld(NUMBER_OF_POINTS_FOR_MELD_IN_OTHER_COLOUR);
 		}
 	}
 }
 
 void GameColour::note_who_meld(short number_of_points) {
-	if (player_with_initiative == player_who_chose_colour)
+	if (gameLeader == player_who_chose_colour)
 		did_player_who_chose_color_meld = number_of_points;
 	else
 		did_other_players_meld = number_of_points;
@@ -183,8 +183,8 @@ void GameColour::note_who_meld(short number_of_points) {
 
 bool GameColour::does_player_meld() {
 	bool does_player_meld = false;
-	if (players_pointer[player_with_initiative]->checkIfPlayerHaveAKingAndQueenInOneColour() == true) {
-		if (players_pointer[player_with_initiative]->askPlayerIfHeWantToMeld() == true)
+	if (players_pointer[gameLeader]->checkIfPlayerHaveAKingAndQueenInOneColour() == true) {
+		if (players_pointer[gameLeader]->askPlayerIfHeWantToMeld() == true)
 			return true;
 	}
 	else
@@ -194,14 +194,14 @@ bool GameColour::does_player_meld() {
 void GameColour::basic_stake_modification() {
 	if (was_colour_successful) {
 		if (players_pointer[(player_who_chose_colour + 1) % 3]->getGamePoints() + players_pointer[(player_who_chose_colour + 2) % 3]->getGamePoints() > 32)
-			basic_stake = 1;
+			basicStake = 1;
 		else if (did_other_players_won_a_trick)
-			basic_stake = 2;
+			basicStake = 2;
 	} else {
 		if (players_pointer[player_who_chose_colour]->getGamePoints() > 32)
-			basic_stake = 1;
+			basicStake = 1;
 		else if (did_player_who_picked_a_colour_won_a_trick)
-			basic_stake = 2;
+			basicStake = 2;
 	}
 }
 
@@ -209,11 +209,11 @@ void GameColour::basic_stake_modification() {
 void GameColour::distribute_game_points() {
 	basic_stake_modification();
 	if (was_colour_successful) {
-		players_pointer[player_who_chose_colour]->addGamePoints(basic_stake * 2 ^ (get_game_points_multiplier() - 1));
+		players_pointer[player_who_chose_colour]->addGamePoints(basicStake * 2 ^ (getGamePointsMultiplier() - 1));
 	}
 	else {
-		players_pointer[(player_who_chose_colour + 1) % 3]->addGamePoints(basic_stake * 2 ^ (get_game_points_multiplier() - 1));
-		players_pointer[(player_who_chose_colour + 2) % 3]->addGamePoints(basic_stake * 2 ^ (get_game_points_multiplier() - 1));
+		players_pointer[(player_who_chose_colour + 1) % 3]->addGamePoints(basicStake * 2 ^ (getGamePointsMultiplier() - 1));
+		players_pointer[(player_who_chose_colour + 2) % 3]->addGamePoints(basicStake * 2 ^ (getGamePointsMultiplier() - 1));
 	}
 }
 

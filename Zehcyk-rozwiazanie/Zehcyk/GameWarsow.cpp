@@ -11,25 +11,25 @@ GameWarsow::GameWarsow(Player* players_adress)
 	: player_who_begins_the_game(getGameLeader()),
 	player_who_lost_warsow(getGameLeaderAdress())
 {
-	basic_stake = 1;
+	basicStake = 1;
 	thrown[0] = NULL;
 	thrown[1] = NULL;
 	thrown[2] = NULL;
-	player_with_initiative = player_who_begins_the_game;
+	gameLeader = player_who_begins_the_game;
 	players_pointer[0] = &players_adress[0];
 	players_pointer[1] = &players_adress[1];
 	players_pointer[2] = &players_adress[2];
-	values_of_thrown_cards[3-1] = { 0 };
+	valuesOfThrownCards[3-1] = { 0 };
 	sum_of_points_from_current_trick = 0;
 	
 }
 
 bool GameWarsow::checking_the_condition_which_depends_from_gametype(short i) {
-	if (players_pointer[player_with_initiative]->getTrickPoints() > 60) {
-		player_who_lost_warsow = player_with_initiative;
+	if (players_pointer[gameLeader]->getTrickPoints() > 60) {
+		player_who_lost_warsow = gameLeader;
 		return false;
 	}
-	else if (i = NUMBER_OF_CARDS_IN_PLAYER_HAND_BEFORE_THROWING - 1 && variable_replaced_by_reference == ANY_OF_PLAYERS) {
+	else if (i = NUMBER_OF_CARDS_IN_PLAYER_HAND_BEFORE_THROWING - 1 && variableReplacedByReference == ANY_OF_PLAYERS) {
 		player_who_lost_warsow = who_has_the_most_points();
 	}
 	return true;
@@ -43,8 +43,8 @@ void GameWarsow::show_info_about_game() {
 }
 
 void GameWarsow::sum_up_and_give_trick_points_to_player_who_won_trick() {
-	sum_of_points_from_current_trick = values_of_thrown_cards[0] + values_of_thrown_cards[1] + values_of_thrown_cards[2];
-	players_pointer[who_is_winning_trick]->addTrickPoints(sum_of_points_from_current_trick);
+	sum_of_points_from_current_trick = valuesOfThrownCards[0] + valuesOfThrownCards[1] + valuesOfThrownCards[2];
+	players_pointer[whoIsWinningTrick]->addTrickPoints(sum_of_points_from_current_trick);
 }
 
 void GameWarsow::game_log_update(short who, short situation)
@@ -57,12 +57,12 @@ void GameWarsow::game_log_update(short who, short situation)
 	if (situation == 1) {
 
 		for (short i = 0; i < NUMBER_OF_PLAYERS; i++) {
-			if (thrown[queue_of_throwing(i)] != NULL) {
+			if (thrown[getPlayersTurnsSequence(i)] != NULL) {
 				log_line.append("\t");
 				tab_counter++;
-				log_line.append(players_pointer[queue_of_throwing(i)]->getName(), 0, 2);
+				log_line.append(players_pointer[getPlayersTurnsSequence(i)]->getName(), 0, 2);
 				log_line.append(":  ");
-				log_line.append(thrown[queue_of_throwing(i)]->symbol);
+				log_line.append(thrown[getPlayersTurnsSequence(i)]->symbol);
 			}
 
 		}
@@ -102,8 +102,8 @@ short GameWarsow::who_has_the_most_points()
 
 
 void GameWarsow::distribute_game_points() {
-		players_pointer[(player_who_lost_warsow + 1) % 3]->addGamePoints(basic_stake * 2 ^ (get_game_points_multiplier() - 1));
-		players_pointer[(player_who_lost_warsow + 2) % 3]->addGamePoints(basic_stake * 2 ^ (get_game_points_multiplier() - 1));
+		players_pointer[(player_who_lost_warsow + 1) % 3]->addGamePoints(basicStake * 2 ^ (getGamePointsMultiplier() - 1));
+		players_pointer[(player_who_lost_warsow + 2) % 3]->addGamePoints(basicStake * 2 ^ (getGamePointsMultiplier() - 1));
 	}
 
 

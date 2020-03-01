@@ -6,18 +6,18 @@
 
 GameDurh::GameDurh(Player* players_adress)
 	:player_who_chose_durh(getGameLeader()),
-	was_durh_successful(variable_replaced_by_reference)
+	was_durh_successful(variableReplacedByReference)
 {
-	basic_stake = 8;
+	basicStake = 8;
 	thrown[0] = NULL;
 	thrown[1] = NULL;
 	thrown[2] = NULL;
-	variable_replaced_by_reference = NO_ANSWER_YET;
-	player_with_initiative = player_who_chose_durh;
+	variableReplacedByReference = NO_ANSWER_YET;
+	gameLeader = player_who_chose_durh;
 	players_pointer[0] = &players_adress[0];
 	players_pointer[1] = &players_adress[1];
 	players_pointer[2] = &players_adress[2];
-	values_of_thrown_cards[3-1] = { 0 };
+	valuesOfThrownCards[3-1] = { 0 };
 }
 
 bool GameDurh::checking_the_condition_which_depends_from_gametype(short i) {
@@ -49,12 +49,12 @@ void GameDurh::game_log_update(short who, short situation)
 	if (situation == 1) {
 
 		for (short i = 0; i < NUMBER_OF_PLAYERS; i++) {
-			if (thrown[queue_of_throwing(i)] != NULL) {
+			if (thrown[getPlayersTurnsSequence(i)] != NULL) {
 				log_line.append("\t");
 				tab_counter++;
-				log_line.append(players_pointer[queue_of_throwing(i)]->getName(), 0, 2);
+				log_line.append(players_pointer[getPlayersTurnsSequence(i)]->getName(), 0, 2);
 				log_line.append(":  ");
-				log_line.append(thrown[queue_of_throwing(i)]->symbol);
+				log_line.append(thrown[getPlayersTurnsSequence(i)]->symbol);
 			}
 
 		}

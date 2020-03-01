@@ -220,25 +220,27 @@ short Auction::subfunction(short who) {
 
 	do {
 		system("CLS");
-		Text::readText(Text::log_frames, 0, 1);
+		std::cout << Text::frames[1];
 		displayAuctionLog(true);
 		pPlayers[who]->show(8, "AUCTION");
-		Text::readText(Text::A_8, 2, 2);
+		std::cout << Text::frames[6];
+	
+		std::cout << Text::auction_text[5];
 		switch (auctionCounter) {
 		case 1:
-			Text::readText(Text::A_8, 4, 1);
+			std::cout << Text::auction_text[6];
 			break;
 		case 2:
-			Text::readText(Text::A_8, 5, 1);
+			std::cout << Text::auction_text[7];
 			break;
 		case 3:
-			Text::readText(Text::A_8, 6, 1);
+			std::cout << Text::auction_text[8];
 			break;
 		case 4:
-			Text::readText(Text::A_8, 7, 1);
+			std::cout << Text::auction_text[9];
 			break;
 		case 5:
-			Text::readText(Text::A_8, 8, 1);
+			std::cout << Text::auction_text[10];
 			break;
 		default:
 			std::cout << "Bledna wartosc auction_counter" << std::endl;
@@ -246,15 +248,17 @@ short Auction::subfunction(short who) {
 			break;
 		}
 		if (*pGameTypeAuction != 7 && *pGameTypeAuction != 8) {
-			Text::readText(Text::A_8, 9, 2);
+			std::cout << Text::auction_text[11];
+			std::cout << Text::auction_text[12];
 			howManyOptions = 4;
 		}
 		else if (*pGameTypeAuction != 7) {
-			Text::readText(Text::A_8, 9, 1);
+			std::cout << Text::auction_text[11];
 			howManyOptions = 3;
 		}
 		else howManyOptions = 2;
-		Text::readText(Text::A_8, 11, 1);
+		std::cout << Text::frames[9];
+		std::cout << Text::frames[10];
 		std::cin >> choice;
 		Text::cinCheck(choice, howManyOptions);
 	} while (choice == 0);

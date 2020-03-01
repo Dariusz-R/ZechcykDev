@@ -5,18 +5,18 @@
 
 GameMisery::GameMisery(Player* players_adress)
 	:player_who_chose_misery(getGameLeader()),
-	was_misery_successful(variable_replaced_by_reference)
+	was_misery_successful(variableReplacedByReference)
 {
-	basic_stake = 6;
+	basicStake = 6;
 	thrown[0] = NULL;
 	thrown[1] = NULL;
 	thrown[2] = NULL;
-	player_with_initiative = player_who_chose_misery;
+	gameLeader = player_who_chose_misery;
 	players_pointer[0] = &players_adress[0];
 	players_pointer[1] = &players_adress[1];
 	players_pointer[2] = &players_adress[2];
-	values_of_thrown_cards[3-1] = { 0 };
-	variable_replaced_by_reference = NO_ANSWER_YET;
+	valuesOfThrownCards[3-1] = { 0 };
+	variableReplacedByReference = NO_ANSWER_YET;
 }
 
 
@@ -47,12 +47,12 @@ void GameMisery::game_log_update(short who, short situation)
 	if (situation == 1) {
 
 		for (short i = 0; i < NUMBER_OF_PLAYERS; i++) {
-			if (thrown[queue_of_throwing(i)] != NULL) {
+			if (thrown[getPlayersTurnsSequence(i)] != NULL) {
 				log_line.append("\t");
 				tab_counter++;
-				log_line.append(players_pointer[queue_of_throwing(i)]->getName(), 0, 2);
+				log_line.append(players_pointer[getPlayersTurnsSequence(i)]->getName(), 0, 2);
 				log_line.append(":  ");
-				log_line.append(thrown[queue_of_throwing(i)]->symbol);
+				log_line.append(thrown[getPlayersTurnsSequence(i)]->symbol);
 			}
 
 		}

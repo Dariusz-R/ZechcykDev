@@ -15,17 +15,17 @@ protected:
 	
 	Card const* thrown[3];
 	Player* players_pointer[3];
-	short values_of_thrown_cards[3];
+	short valuesOfThrownCards[3];
 
-	short player_with_initiative;
-	short variable_replaced_by_reference;
-	short who_is_winning_trick;
-	short player_who_won_the_trick;
+	short gameLeader;
+	short variableReplacedByReference;
+	short whoIsWinningTrick;
+	short playerWhoWonTheTrick;
 
 	static std::vector <std::string> game_log;
 	static std::vector <std::string> trick_log;
 
-	short basic_stake; 
+	short basicStake; 
 
 	enum {
 		ANY_OF_PLAYERS = 4,
@@ -37,7 +37,7 @@ protected:
 private:
 
 	static short gameLeader;
-	static short game_points_multiplier;
+	static short gamePointsMultiplier;
 
 	//METHODS
 public:
@@ -49,8 +49,8 @@ public:
 	static short getGameLeader();
 	static short & getGameLeaderAdress();
 
-	static void set_game_points_multiplier(short);
-	static short get_game_points_multiplier();
+	static void setGamePointsMultiplier(short);
+	static short getGamePointsMultiplier();
 	
 protected: // ORDERED CHRONLOGICALLY
 
@@ -58,17 +58,17 @@ protected: // ORDERED CHRONLOGICALLY
   //{
 		short playTrick();
 		//{
-			short queue_of_throwing(short);
-			void player_throws_card_then_it_is_evaluated(short id_player);
+			short getPlayersTurnsSequence(short);
+			void runThrowingCardMechanism(short id_player);
 			//{
-				virtual std::vector <short> what_player_can_throw(short);
-				void trick_log_update(short who);
-				virtual void card_evaluation(Card const*, short&);
+				virtual std::vector <short> checkWhichOfHisCardsPlayerCanThrow(short);
+				void updateTrickLog(short who);
+				virtual void EvaluateCard(Card const*, short&);
 			//}
-			virtual short compare_two_cards(short, short);
-			virtual void sum_up_and_give_trick_points_to_player_who_won_trick();
-			virtual void game_log_update(short, short = 1);
-			void remove_thrown_cards_from_players_hands();
+			virtual short compareTwoCards(short, short);
+			virtual void sumPointsAndGiveThemToTheNewGameLeader();
+			virtual void updateGameLog(short, short = 1);
+			void removeThrownCardsFromPlayersHands();
 		//}
 		virtual bool checking_the_condition_which_depends_from_gametype(short) = 0;
 		virtual void distribute_game_points();

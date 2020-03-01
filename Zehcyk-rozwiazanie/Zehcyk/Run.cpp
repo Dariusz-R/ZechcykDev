@@ -48,7 +48,7 @@ void Run::run_general() {
 			play = auction.confirmThatGameLeaderWantToPlayAfterHeSawAllHisCards();
 		else if (result_of_the_first_auction == "WARSOW") {
 			Game::setGameLeader(auction.getGameLeader());
-			Game::set_game_points_multiplier(auction.getAuctionCounter());
+			Game::setGamePointsMultiplier(auction.getAuctionCounter());
 			GameWarsow game_warsow(players);
 			game_warsow.playGame();
 		}
@@ -57,7 +57,7 @@ void Run::run_general() {
 
 	auction.carrySecondAuction();
 	Game::setGameLeader(auction.getGameLeader());
-	Game::set_game_points_multiplier(auction.getAuctionCounter());
+	Game::setGamePointsMultiplier(auction.getAuctionCounter());
 	if (game_type > 0 && game_type < 5){
 		GameColour game_colour(players, game_type);
 		game_colour.playGame();

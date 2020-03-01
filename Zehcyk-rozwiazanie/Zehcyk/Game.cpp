@@ -6,7 +6,7 @@
 
 
 short Game::gameLeader;
-short Game::game_points_multiplier;
+short Game::gamePointsMultiplier;
 std::vector <std::string> Game::game_log;
 std::vector <std::string> Game::trick_log;
 std::string Game::current_trick_log = "9\r\t\t\t\t\t\t\t\t*\r\t*        ";
@@ -24,12 +24,12 @@ short& Game::getGameLeaderAdress() {
 	return gameLeader;
 }
 
-void Game::set_game_points_multiplier(short which_player) {
+void Game::setGamePointsMultiplier(short which_player) {
 	gameLeader = which_player;
 }
 
-short Game::get_game_points_multiplier() {
-	return game_points_multiplier;
+short Game::getGamePointsMultiplier() {
+	return gamePointsMultiplier;
 }
 
 void Game::read_trick_log() {
@@ -58,7 +58,7 @@ void Game::read_game_log() {
 
 void Game::playGame() {
 	for (int i = 0; i < NUMBER_OF_CARDS_IN_PLAYER_HAND_BEFORE_THROWING; i++) {
-		 player_who_won_the_trick = playTrick();
+		 playerWhoWonTheTrick = playTrick();
 		if (checking_the_condition_which_depends_from_gametype(i) == false)
 			break;
 	}
@@ -71,69 +71,69 @@ void Game::playGame() {
 
 short Game::playTrick()
 {
-	who_is_winning_trick = ANY_OF_PLAYERS;
+	whoIsWinningTrick = ANY_OF_PLAYERS;
 	thrown[0] = {};
 	thrown[1] = {};
 	thrown[2] = {};
 
 
-	player_throws_card_then_it_is_evaluated(player_with_initiative);
-	who_is_winning_trick = player_with_initiative;
-	player_throws_card_then_it_is_evaluated(queue_of_throwing(1));
-	who_is_winning_trick = compare_two_cards(player_with_initiative, queue_of_throwing(1));
-	player_throws_card_then_it_is_evaluated(queue_of_throwing(2));
-	who_is_winning_trick = compare_two_cards(who_is_winning_trick, queue_of_throwing(2));
+	runThrowingCardMechanism(gameLeader);
+	whoIsWinningTrick = gameLeader;
+	runThrowingCardMechanism(getPlayersTurnsSequence(1));
+	whoIsWinningTrick = compareTwoCards(gameLeader, getPlayersTurnsSequence(1));
+	runThrowingCardMechanism(getPlayersTurnsSequence(2));
+	whoIsWinningTrick = compareTwoCards(whoIsWinningTrick, getPlayersTurnsSequence(2));
 
-	sum_up_and_give_trick_points_to_player_who_won_trick();
+	sumPointsAndGiveThemToTheNewGameLeader();
 	
-	game_log_update(who_is_winning_trick, 2);
-	remove_thrown_cards_from_players_hands();
-	player_with_initiative = who_is_winning_trick;
+	updateGameLog(whoIsWinningTrick, 2);
+	removeThrownCardsFromPlayersHands();
+	gameLeader = whoIsWinningTrick;
 
-	return who_is_winning_trick;
+	return whoIsWinningTrick;
 }
 
-short Game::queue_of_throwing (short which_after_player_with_initiative) {
-	return ((player_with_initiative + which_after_player_with_initiative) % 3);
+short Game::getPlayersTurnsSequence (short which_after_player_with_initiative) {
+	return ((gameLeader + which_after_player_with_initiative) % 3);
 }
 
-void Game::player_throws_card_then_it_is_evaluated(short id_player) {
-	if (id_player == player_with_initiative)
-		thrown[player_with_initiative] = players_pointer[player_with_initiative]->whichCardPlayerThrow();
+void Game::runThrowingCardMechanism(short id_player) {
+	if (id_player == gameLeader)
+		thrown[gameLeader] = players_pointer[gameLeader]->whichCardPlayerThrow();
 	else
-		thrown[id_player] = players_pointer[id_player]->whichCardPlayerThrow(what_player_can_throw(id_player));
+		thrown[id_player] = players_pointer[id_player]->whichCardPlayerThrow(checkWhichOfHisCardsPlayerCanThrow(id_player));
 
-	trick_log_update(id_player);
-	card_evaluation(thrown[id_player], values_of_thrown_cards[id_player]);
+	updateTrickLog(id_player);
+	EvaluateCard(thrown[id_player], valuesOfThrownCards[id_player]);
 	system("CLS");
 }
 
-void Game::trick_log_update(short who)
+void Game::updateTrickLog(short who)
 {
 		std::string thrown_card_symbol[3];
 		for (short i = 0; i < NUMBER_OF_PLAYERS; i++) 
-			thrown_card_symbol[i] = (thrown[queue_of_throwing(i)] == NULL) ? "     " : thrown[queue_of_throwing(i)]->symbol;
+			thrown_card_symbol[i] = (thrown[getPlayersTurnsSequence(i)] == NULL) ? "     " : thrown[getPlayersTurnsSequence(i)]->symbol;
 
 		current_trick_log = "9\r" + Text::one_line_frame + "        "
-			+ players_pointer[queue_of_throwing(0)]->getNameShortcut() + ": " + thrown_card_symbol[0] + "      "
-			+ players_pointer[queue_of_throwing(1)]->getNameShortcut() + ": " + thrown_card_symbol[1] + "      "
-			+ players_pointer[queue_of_throwing(2)]->getNameShortcut() + ": " + thrown_card_symbol[2] ;
+			+ players_pointer[getPlayersTurnsSequence(0)]->getNameShortcut() + ": " + thrown_card_symbol[0] + "      "
+			+ players_pointer[getPlayersTurnsSequence(1)]->getNameShortcut() + ": " + thrown_card_symbol[1] + "      "
+			+ players_pointer[getPlayersTurnsSequence(2)]->getNameShortcut() + ": " + thrown_card_symbol[2] ;
 		if (thrown_card_symbol[0] != "     " && thrown_card_symbol[1] != "     " && thrown_card_symbol[2] != "     ") {
-			current_trick_log[0] = who_is_winning_trick;
+			current_trick_log[0] = whoIsWinningTrick;
 			trick_log.push_back(current_trick_log);
 			current_trick_log.clear();
 		}
 }
 
-std::vector<short> Game::what_player_can_throw(short id_player) {
+std::vector<short> Game::checkWhichOfHisCardsPlayerCanThrow(short id_player) {
 	std::vector <short> values_of_the_player_cards_in_colour, player_cards_in_colour, player_cards_winning;
-	player_cards_in_colour = players_pointer[id_player]->checkHowManyCardsInThrownCardColourPlayerHave(thrown[player_with_initiative]->colour);
+	player_cards_in_colour = players_pointer[id_player]->checkHowManyCardsInThrownCardColourPlayerHave(thrown[gameLeader]->colour);
 	if (!player_cards_in_colour.empty()) {
 
 		for (short i = 0; i < player_cards_in_colour.size(); i++) {
 			values_of_the_player_cards_in_colour.push_back(0);
-			card_evaluation(players_pointer[id_player]->shareCard(player_cards_in_colour[i]), values_of_the_player_cards_in_colour[i]);
-			if (values_of_the_player_cards_in_colour[i] > values_of_thrown_cards[who_is_winning_trick]) {
+			EvaluateCard(players_pointer[id_player]->shareCard(player_cards_in_colour[i]), values_of_the_player_cards_in_colour[i]);
+			if (values_of_the_player_cards_in_colour[i] > valuesOfThrownCards[whoIsWinningTrick]) {
 				player_cards_winning.push_back(player_cards_in_colour[i]);
 			}
 
@@ -149,7 +149,7 @@ std::vector<short> Game::what_player_can_throw(short id_player) {
 
 }
 
-void Game::card_evaluation(Card const* card_to_evaluate, short& conteiner) {
+void Game::EvaluateCard(Card const* card_to_evaluate, short& conteiner) {
 
 	switch (card_to_evaluate->symbol[2]) {
 	case '9':
@@ -177,11 +177,11 @@ void Game::card_evaluation(Card const* card_to_evaluate, short& conteiner) {
 
 }
 
-short Game::compare_two_cards(short id_player, short id2_player)
+short Game::compareTwoCards(short id_player, short id2_player)
 {
 	if (thrown[id_player]->colour == thrown[id2_player]->colour) {
 
-		if (values_of_thrown_cards[id_player] < values_of_thrown_cards[id2_player])
+		if (valuesOfThrownCards[id_player] < valuesOfThrownCards[id2_player])
 			return id2_player;
 		else
 			return id_player;
@@ -191,28 +191,28 @@ short Game::compare_two_cards(short id_player, short id2_player)
 		return id_player;
 }
 
-void Game::sum_up_and_give_trick_points_to_player_who_won_trick() {
+void Game::sumPointsAndGiveThemToTheNewGameLeader() {
 	;
 }
 
-void Game::game_log_update(short who, short situation) {
+void Game::updateGameLog(short who, short situation) {
 	std::string log_line = "";
 	log_line = "9\r" + Text::one_line_frame + players_pointer[who]->getName() + Text::game_log_message[0] + Text::game_log_message[1] +
 		Text::game_log_message[2];
 	game_log.push_back(log_line);
 }
 
-void Game::remove_thrown_cards_from_players_hands() {
+void Game::removeThrownCardsFromPlayersHands() {
 	for (short i = 0; i < NUMBER_OF_PLAYERS; i++)
 		players_pointer[i]->eraseThrownCardFromPlayerHand();
 }
 
 void Game::distribute_game_points() {
-	if (variable_replaced_by_reference == true)
-		players_pointer[gameLeader]->addGamePoints(basic_stake * 2 ^ (game_points_multiplier - 1));
+	if (variableReplacedByReference == true)
+		players_pointer[gameLeader]->addGamePoints(basicStake * 2 ^ (gamePointsMultiplier - 1));
 	else {
-		players_pointer[(gameLeader + 1) %3]->addGamePoints(basic_stake * 2 ^ (game_points_multiplier - 1));
-		players_pointer[(gameLeader + 2) %3]->addGamePoints(basic_stake * 2 ^ (game_points_multiplier - 1));
+		players_pointer[(gameLeader + 1) %3]->addGamePoints(basicStake * 2 ^ (gamePointsMultiplier - 1));
+		players_pointer[(gameLeader + 2) %3]->addGamePoints(basicStake * 2 ^ (gamePointsMultiplier - 1));
 	}
 }
 

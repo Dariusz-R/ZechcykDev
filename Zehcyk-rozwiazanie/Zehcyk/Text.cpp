@@ -16,6 +16,7 @@ std::vector <std::string> Text::log_message;
 std::vector <std::string> Text::game_log_message;
 std::vector <std::string> Text::frames;
 std::vector <std::string> Text::auction_text;
+std::vector <std::string> Text::auction_summary;
 std::string Text::language_version;
 std::string Text::one_line_frame = "\t\t\t\t\t\t\t\t*\r\t*";
 
@@ -153,6 +154,7 @@ void Text::load_language_version()
 		load_language_file(game_log_message, "game_log_message_pl.txt", '\n');
 		load_language_file(frames, "frames_pl.txt");
 		load_language_file(auction_text, "auction_pl.txt");
+		load_language_file(auction_summary, "auction_summary_pl.txt", '\n');
 	}
 	else if (language_version == "English") {
 		load_language_file(start_menu, "start_menu_eng.txt");

@@ -22,6 +22,7 @@ class Text
 	static std::vector <std::string> game_log_message;
 	static std::vector <std::string> frames;
 	static std::vector <std::string> auction_text;
+	static std::vector <std::string> auction_summary;
 
 
 	static void set_language_version(std::string);
