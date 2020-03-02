@@ -1,0 +1,21 @@
+	*		  1. Obierz Czerwien			*
+	*		  2. Obierz Dzwonek			*
+	*		  3. Obierz Wino			*
+	*		  4. Obierz Zoladz			*
+	*							*
+#	*		  5. Powiedz Warszawa			*
+#	*		  5. Powiedz Z Warszawa			*
+	*		  6. Powiedz Kontra-Warszawa		*
+#	*		  5. Powiedz Z Kontra-Warszawa		*
+	*		  6. Powiedz Rekontra-Warszawa		*
+#	*		  1. Zapytaj sie			*
+	*		  2. Zrezygnuj (przegrana za 2 pkt)	*
+#	*		  1. Nie kontruj.			*
+#	*		  2. Kontra!				*
+#	*		  2. Rekontra!				*
+#	*		  2. Slupa!				*
+#	*		  2. Mord!				*
+#	*		  2. Supermord!				*
+#	*		  3. Durh!				*
+#	*		  4. Mizerka!				*
+#
