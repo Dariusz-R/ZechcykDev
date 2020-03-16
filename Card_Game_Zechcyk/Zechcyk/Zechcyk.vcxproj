@@ -29,6 +29,9 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Run.h" />
     <ClInclude Include="Text.h" />
+    <ClInclude Include="TextDisplaying.h" />
+    <ClInclude Include="TextLoading.h" />
+    <ClInclude Include="TextLoadingPathToLanguageVersionFiles.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Auction.cpp" />
@@ -42,6 +45,9 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Run.cpp" />
     <ClCompile Include="Text.cpp" />
+    <ClCompile Include="TextDisplaying.cpp" />
+    <ClCompile Include="TextLoading.cpp" />
+    <ClCompile Include="TextLoadingPathToLanguageVersionFiles.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

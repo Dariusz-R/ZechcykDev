@@ -6,8 +6,9 @@
 #include "Game.h"
 
 
-std::vector <std::string> Text::pl_OR_eng;
 std::vector <std::string> Text::start_menu;
+std::string Text::one_line_frame = "\t\t\t\t\t\t\t\t*\r\t*";
+std::vector <std::string> Text::pl_OR_eng;
 std::vector <std::string> Text::A_4;
 std::vector <std::string> Text::A_8;
 std::vector <std::string> Text::Warsow_txt;
@@ -18,7 +19,7 @@ std::vector <std::string> Text::frames;
 std::vector <std::string> Text::auction_text;
 std::vector <std::string> Text::auction_summary;
 std::string Text::language_version;
-std::string Text::one_line_frame = "\t\t\t\t\t\t\t\t*\r\t*";
+
 
 void Text::set_language_version(std::string lang) {
 	language_version = lang; 
@@ -107,67 +108,9 @@ void Text::cinCheck(short& cin_value, short range, std::vector <short> allowed_v
 
 
 
-void Text::load_language_file(std::vector <std::string> &vector_name, std::string file_name , char delim) {
-
-	std::string line;
-	std::fstream file;
-	
-	std::string path;
-
-	if (language_version == "Polish") {
-		path = ".\\Polish\\";
-		path.append(file_name);
-	}
-	else if (language_version == "English") {
-		path = ".\\English\\";
-		path.append(file_name);
-	}
-	else if (language_version == "") path = ".\\Select_language\\pl_OR_eng.txt";
-		
-		
-	file.open(path, std::ios::in);
 
 
-	if (file.good() == false)
-	{
-		std::cout << "Blad podczas otwierania skryptu." << std::endl << std::endl;
-		exit(0);
-	}
-	while (getline(file, line, delim))
-	{
-		vector_name.push_back(line);
-	}
-	file.close();
 
-}
-
-void Text::load_language_version()
-{
-	if (language_version == "") load_language_file(pl_OR_eng);
-	else if (language_version == "Polish"){
-		load_language_file(start_menu, "start_menu_pl.txt");
-		load_language_file(log_frames, "log_frames_pl.txt");
-		load_language_file(log_message, "auction_log_message_pl.txt", '\n');
-		load_language_file(A_4, "auction_four_cards_pl.txt");
-		load_language_file(A_8, "auction_eight_cards_pl.txt");
-		load_language_file(Warsow_txt, "game_warsow_pl.txt");
-		load_language_file(game_log_message, "game_log_message_pl.txt", '\n');
-		load_language_file(frames, "frames_pl.txt");
-		load_language_file(auction_text, "auction_pl.txt");
-		load_language_file(auction_summary, "auction_summary_pl.txt", '\n');
-	}
-	else if (language_version == "English") {
-		load_language_file(start_menu, "start_menu_eng.txt");
-		load_language_file(log_frames, "log_frames_eng.txt");
-		load_language_file(log_message, "auction_log_message_eng.txt", '\n');
-		load_language_file(A_4, "auction_four_cards_eng.txt");
-		load_language_file(A_8, "auction_eight_cards_eng.txt");
-		load_language_file(Warsow_txt, "game_warsow_eng.txt");
-		load_language_file(game_log_message, "game_log_message_eng.txt", '\n');
-		load_language_file(frames, "frames_eng.txt");
-		load_language_file(auction_text, "auction_eng.txt");
-	}
-}
 
 
 

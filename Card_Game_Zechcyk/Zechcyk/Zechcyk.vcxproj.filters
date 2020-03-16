@@ -34,6 +34,9 @@
     <ClCompile Include="Text.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TextLoading.cpp" />
+    <ClCompile Include="TextDisplaying.cpp" />
+    <ClCompile Include="TextLoadingPathToLanguageVersionFiles.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Auction.h">
@@ -64,6 +67,15 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Text.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TextDisplaying.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TextLoading.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TextLoadingPathToLanguageVersionFiles.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
